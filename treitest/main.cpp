@@ -9,13 +9,11 @@ int main(int argc, char *argv[])
     //QCoreApplication a(argc, argv);
     QApplication app(argc, argv);
 
-    QWidget window;
-    window.resize(320, 240);
-    window.show();
-    window.setWindowTitle(
-        QApplication::translate("toplevel", "Top-level widget"));
-
     Window w;
+    w.resize(320, 240);
+    w.setWindowTitle(
+        QApplication::translate("hello", "hello window"));
+
     w.show();
 
     return app.exec();
