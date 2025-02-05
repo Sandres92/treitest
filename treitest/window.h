@@ -12,9 +12,6 @@ public:
     Window(QWidget *parent = 0);
     ~Window();
 
-    void paintEvent(QPaintEvent *);
-    //void mousePressEvent(QMouseEvent *event) override;
-
 private:
     QPainterPath trianglePath;
 };
