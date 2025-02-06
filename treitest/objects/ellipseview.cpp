@@ -1,3 +1,5 @@
 #include "ellipseview.h"
 
-EllipseView::EllipseView() {}
+namespace trei {
+    EllipseView::EllipseView() {}
+}

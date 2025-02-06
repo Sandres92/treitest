@@ -1,18 +1,25 @@
 #ifndef RECTANGLEVIEW_H
 #define RECTANGLEVIEW_H
 
-#include <QDebug>
 #include <QPaintDevice>
 #include <QWidget>
+#include <QString>
 
-class RectangleView: public QWidget
-{
-     Q_OBJECT
-//public:
-//    RectangleView();
+#include "objectview.h"
 
-protected:
-    void paintEvent(QPaintEvent *) override;
-    void mousePressEvent(QMouseEvent *event) override;
-};
+namespace trei {
+    class RectangleView: public ObjectView
+    {
+         Q_OBJECT
+    //public:
+    //    RectangleView();
+     public:
+         RectangleView();
+         ~RectangleView();
+
+    protected:
+        void paintEvent(QPaintEvent *) override;
+        void mousePressEvent(QMouseEvent *event) override;
+    };
+}
 #endif // RECTANGLEVIEW_H

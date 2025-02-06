@@ -1,27 +1,35 @@
 #include "rectangleview.h"
 #include <QPainter>
+#include <QDebug>
 
-//RectangleView::RectangleView() {
-//    qDebug() << "hello !";
-//}
+namespace trei {
+    RectangleView::RectangleView()
+    {
+        qDebug()<< "RectangleView ";
+    }
 
-void RectangleView::paintEvent(QPaintEvent *) {
-    QPainter painter(this);
+    RectangleView::~RectangleView()
+    {
 
-    painter.setBrush(Qt::blue);
+    }
 
-    QPolygonF triangle;
-    triangle << QPointF(50, 0)
-             << QPointF(0, 100)
-             << QPointF(100, 100)
-             << QPointF(50, 0);
+    void RectangleView::paintEvent(QPaintEvent *) {
+        QPainter painter(this);
 
-    painter.drawPolygon(triangle);
+        painter.setBrush(Qt::blue);
+        painter.setPen(QPen(Qt::cyan, 1));
 
-    resize(100, 100);
-}
+        QPolygonF triangle;
+        triangle << QPointF(width/2.f, 0.f)
+                 << QPointF(0.f, height)
+                 << QPointF(width, height)
+                 << QPointF(width/2.f, 0.f);
 
-void RectangleView::mousePressEvent(QMouseEvent *event)
-{
-    qDebug() <<"RectangleView::mousePressEvent";
+        painter.drawPolygon(triangle);
+    }
+
+    void RectangleView::mousePressEvent(QMouseEvent *event)
+    {
+        qDebug() <<"RectangleView::mousePressEvent";
+    }
 }

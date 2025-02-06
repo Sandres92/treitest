@@ -4,16 +4,17 @@
 #include <QtWidgets>
 #include <QPainterPath>
 
-class Window : public QWidget
-{
-    Q_OBJECT
+namespace trei {
+    class Window : public QWidget
+    {
+        Q_OBJECT
 
-public:
-    Window(QWidget *parent = 0);
-    ~Window();
+    public:
+        explicit Window(QWidget *parent = 0);
+        ~Window();
 
-private:
-    QPainterPath trianglePath;
-};
-
+    private:
+        QPainterPath trianglePath;
+    };
+}
 #endif // WINDOW_H

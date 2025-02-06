@@ -1,12 +1,14 @@
 #include "window.h"
 
-Window::Window(QWidget *parent)
-    : QWidget(parent)
-{
+namespace trei {
+    Window::Window(QWidget *parent)
+        : QWidget(parent)
+    {
 
-}
+    }
 
-Window::~Window()
-{
+    Window::~Window()
+    {
 
+    }
 }

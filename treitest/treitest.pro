@@ -10,9 +10,11 @@ SOURCES += \
         engine.cpp \
         objects/objectview.cpp \
         objects/ellipseview.cpp \
+        objects/polygonview.cpp \
         objects/rectangleview.cpp \
         window.cpp \
-        main.cpp
+        main.cpp \
+        xmlparser.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -24,7 +26,10 @@ HEADERS += \
             engine.h \
             objects/objectview.h \
             objects/ellipseview.h \
+            objects/polygonview.h \
             objects/rectangleview.h \
-            window.h
+            utility/convector.h \
+            window.h \
+            xmlparser.h
 
 RESOURCES += resources/figure.xml
