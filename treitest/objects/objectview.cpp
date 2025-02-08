@@ -1,14 +1,18 @@
 #include "objectview.h"
+#include "QDebug"
 
 namespace trei {
     ObjectView::ObjectView() {
 
     }
 
-    ObjectView::ObjectView(const QString &name, float posx, float posy, float width, float height, int linewidth)
-        :name(name), posx(posx), posy(posy), width(width), height(height), linewidth(linewidth)
+    ObjectView::ObjectView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
+                           const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
+        :name(name), posx(posx), posy(posy), width(width), height(height), angle (angle), lock(lock),
+        lineColor(lineColor), lineWidth(lineWidth), fill(fill), fillColor(fillColor)
     {
-
+        resize(width, height);
+        move(posx, posy);
     }
 
     ObjectView::~ObjectView() {
@@ -52,9 +56,9 @@ namespace trei {
         resize(width, height);
     }
 
-    void ObjectView::setLinewidth(int linewidth)
+    void ObjectView::setLineWidth(int lineWidth)
     {
-        this->linewidth = linewidth;
+        this->lineWidth = lineWidth;
     }
 
     QString ObjectView::getName(QString name) const

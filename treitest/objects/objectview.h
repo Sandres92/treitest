@@ -12,8 +12,9 @@ namespace trei {
         Q_OBJECT
 
         public:
-            ObjectView();
-            ObjectView(const QString &name, float posx, float posy, float width, float height, int linewidth);
+            explicit ObjectView();
+            explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
+                                int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
 
             ~ObjectView();
 
@@ -22,7 +23,7 @@ namespace trei {
             void setPosy(float posy);
             void setWidth(float width);
             void setHeight(float height);
-            void setLinewidth(int linewidth);
+            void setLineWidth(int lineWidth);
 
             void setPos(float posx, float posy);
             void setSize(float width, float height);
@@ -40,7 +41,12 @@ namespace trei {
             float posy;
             float width;
             float height;
-            int linewidth;
+            int angle;
+            bool lock;
+            QColor lineColor;
+            int lineWidth;
+            bool fill;
+            QColor fillColor;
     };
 }
 #endif // OBJECTVIEW_H

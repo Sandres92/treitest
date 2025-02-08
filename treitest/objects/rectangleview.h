@@ -10,11 +10,12 @@
 namespace trei {
     class RectangleView: public ObjectView
     {
-         Q_OBJECT
-    //public:
+      //public:
     //    RectangleView();
      public:
-         RectangleView();
+         explicit RectangleView();
+         explicit RectangleView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
+                                const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
          ~RectangleView();
 
     protected:

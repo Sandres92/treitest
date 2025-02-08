@@ -5,27 +5,36 @@
 namespace trei {
     RectangleView::RectangleView()
     {
-        qDebug()<< "RectangleView ";
+        qDebug()<< "RectangleView 1";
+    }
+
+    RectangleView::RectangleView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
+                                 const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
+        :ObjectView(name, posx, posy, width, height, angle, lock, lineColor, linewidth, fill, fillColor)
+    {
+
     }
 
     RectangleView::~RectangleView()
     {
-
     }
 
     void RectangleView::paintEvent(QPaintEvent *) {
         QPainter painter(this);
 
-        painter.setBrush(Qt::blue);
-        painter.setPen(QPen(Qt::cyan, 1));
+        if (fill){
+            painter.setBrush(fillColor);
+        }
+        painter.setPen(QPen(lineColor, lineWidth));
 
-        QPolygonF triangle;
-        triangle << QPointF(width/2.f, 0.f)
-                 << QPointF(0.f, height)
+        QPolygonF rect;
+        rect << QPointF(0.f, 0.f)
+                 << QPointF(width, 0.f)
                  << QPointF(width, height)
-                 << QPointF(width/2.f, 0.f);
+                 << QPointF(0.f, height)
+                 << QPointF(0.f, 0.f);
 
-        painter.drawPolygon(triangle);
+        painter.drawPolygon(rect);
     }
 
     void RectangleView::mousePressEvent(QMouseEvent *event)

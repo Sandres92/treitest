@@ -3,7 +3,7 @@
         <objectView class="EllipseView" name="Эллипс" posx="71.0" posy="53.0" width="75.0" height="75.0" angle="0" lock="false" color="0x000000ff" linewidth="2" fill="true" fillcolor="0xcc3333ff">
            <scripts/>
         </objectView>
-        <objectView class="RectangleView" name="Прямоугольник" posx="253.0" posy="189.0" width="75.0" height="75.0" angle="0" lock="false" color="0x000000ff" linewidth="2" fill="true" fillcolor="0x4d804dff">
+        <objectView class="RectangleView" name="Прямоугольник" posx="253.0" posy="189.0" width="75.0" height="75.0" angle="0" lock="false" color="0x0000000ff" linewidth="2" fill="true" fillcolor="0x4d804dff">
            <scripts/>
         </objectView>
         <objectView class="PolygonView" name="Полигон" posx="527.0" posy="270.0" width="118.0" height="98.0" angle="0" lock="false" color="0x000000ff" linewidth="2" fill="true" fillcolor="0x334db3ff">
