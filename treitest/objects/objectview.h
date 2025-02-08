@@ -6,7 +6,8 @@
 #include <QString>
 #include <QColor>
 
-namespace trei {
+namespace trei
+{
     class ObjectView: public QWidget
     {
         Q_OBJECT
