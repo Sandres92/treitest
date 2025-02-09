@@ -4,12 +4,8 @@
 #include <QDebug>
 
 #include <QWidget>
-#include <QWindow>
 
-#include "window.h"
-#include "objects/rectangleview.h"
-#include "objects/ellipseview.h"
-#include "objects/polygonview.h"
+#include "xmlparser.h"
 
 namespace trei {
     class Engine
@@ -22,10 +18,8 @@ namespace trei {
 
     private:
         void parseWindow();
-        Window * createWindow(const QXmlStreamReader &xml);
-        RectangleView *createRectangleView(const QXmlStreamReader &xml);
-        EllipseView *createEllipseView(const QXmlStreamReader &xml);
-        PolygonView *createPolygonView(QXmlStreamReader &xml);
+
+        XMLParser xMLParser;
     };
 }
 
