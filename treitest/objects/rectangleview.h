@@ -11,13 +11,13 @@ namespace trei
 {
     class RectangleView: public ObjectView
     {
-        //public:
-        //    RectangleView();
+        Q_OBJECT
+
         public:
             explicit RectangleView();
             explicit RectangleView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                                     const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
-            ~RectangleView();
+            ~RectangleView() = default;
 
         protected:
             void paintEvent(QPaintEvent *) override;

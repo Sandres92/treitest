@@ -10,16 +10,17 @@
 namespace trei {
     class Engine
     {
-    public:
-        Engine();
-        ~Engine();
+        public:
+            Engine();
+            ~Engine();
 
-        void init();
+            void init();
 
-    private:
-        void parseWindow();
+        private:
+            XMLParser xMLParser;
 
-        XMLParser xMLParser;
+            void loadXML();
+            void saveXML();
     };
 }
 

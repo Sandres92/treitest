@@ -9,6 +9,7 @@ namespace trei
     {
         public:
             ObjectView* createObjectView(QXmlStreamReader &xml) override;
+            const QByteArray toXML() const override;
     };
 }
 #endif // ELLIPSEVIEWFACTORY_H

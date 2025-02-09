@@ -8,4 +8,9 @@ namespace trei
     {
         return createCommonObjectView<RectangleView>(xml);
     }
+
+    const QByteArray RectangleViewFactory::toXML() const
+    {
+        return nullptr;
+    }
 }

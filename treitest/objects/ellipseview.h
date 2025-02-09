@@ -11,6 +11,8 @@ namespace trei
 {
     class EllipseView: public ObjectView
     {
+        Q_OBJECT
+
         public:
             explicit EllipseView();
             explicit EllipseView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,

@@ -13,28 +13,38 @@ namespace trei
         Q_OBJECT
 
         public:
-            explicit ObjectView();
+            explicit ObjectView() = default;
             explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
                                 int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
 
-            ~ObjectView();
+            virtual ~ObjectView() = default;
 
             void setName(const QString &name);
             void setPosx(float posx);
             void setPosy(float posy);
             void setWidth(float width);
             void setHeight(float height);
+            void setAngle(int angle);
+            void setLock(bool lock);
+            void setLineColor(const QColor &lineColor);
             void setLineWidth(int lineWidth);
+            void setFill(bool fill);
+            void setFillColor(const QColor &fillColor);
 
             void setPos(float posx, float posy);
             void setSize(float width, float height);
 
-            QString getName(QString name) const;
-            float getPosx(float posx) const;
-            float getPosy(float posy) const;
-            float getWidth(float width) const;
-            float getHeight(float height) const;
-            int getLinewidth(int linewidth) const;
+            QString getName() const;
+            float getPosx() const;
+            float getPosy() const;
+            float getWidth() const;
+            float getHeight() const;
+            int getAngle() const;
+            bool getLock() const;
+            QColor getLineColor() const;
+            int getLineWidth() const;
+            bool getFill() const;
+            QColor getFillColor() const;
 
         protected:
             QString name;

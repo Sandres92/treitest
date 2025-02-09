@@ -33,6 +33,8 @@ namespace trei
 
     void EllipseView::mousePressEvent(QMouseEvent *event)
     {
-        qDebug() <<"EllipseView::mousePressEvent";
+        qDebug() <<"EllipseView::mousePressEvent  " << metaObject()->className();
+
+
     }
 }

@@ -1,23 +1,18 @@
 #include "xmlparser.h"
 
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
+#include <QXmlStreamEntityDeclaration>
+
 #include <QFile>
 #include <QDebug>
 
 namespace trei {
-    XMLParser::XMLParser()
-    {
-    }
-
-    XMLParser::~XMLParser()
-    {
-    }
-
     void XMLParser::load()
     {
         QFile file(":/resources/figure.xml");
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qDebug() << "Error open file!";
+            qDebug() << "Error open file to read! Error = " << file.errorString();
             return;
         }
 
@@ -41,6 +36,17 @@ namespace trei {
                 if(xml.name() == "objectView") {
                     QString className = xml.attributes().value("class").toString();
                     ObjectView *objectView = objectViewFactories.createObjectView(className, xml);
+
+                    QString str = typeid(*objectView).name();
+                    QString str2 = objectView->metaObject()->className();
+                    int ind2 = str2.lastIndexOf("::") + 2;
+                    QString str3 = "A::B::PolygonView";
+                    int ind3 = str3.lastIndexOf("::") + 2;
+                    QString subString2 = str2.mid(ind2); //
+                    QString subString3 = str3.mid(ind3); // subString contains "is"
+                    qDebug() << str << " | " << str2 << " = " << ind2 << " | " << str3 << " = " << ind3;
+                    qDebug() << subString2 << " | " << subString3;
+
                     if(objectView != nullptr)
                     {
                         objectView->setParent(window);
@@ -63,9 +69,58 @@ namespace trei {
         }
 
         window->show();
+
+        file.close();
     }
 
     void XMLParser::save()
     {
+        QString filePath = QDir::currentPath() + "/figure_copy_copy.xml";
+        qDebug() << filePath;
+
+        QFileInfo fileInfo (filePath);
+        QFile file(filePath);
+
+        if(!fileInfo.exists())
+        {
+            qDebug() << "File for write not exist";
+        }
+
+        if (!file.open(QIODevice::WriteOnly)) {
+            qDebug() << "Error open file to write! Error = " << file.errorString();
+            return;
+        }
+
+
+        QXmlStreamWriter xml(&file);
+
+        xml.setAutoFormatting(true);
+        xml.writeStartDocument();
+        xml.writeStartElement("scene");
+
+        //for (SceneObject *object : objects)
+        //{
+            xml.writeStartElement("object");
+            xml.writeAttribute("type 1", "aa");
+            xml.writeAttribute("type 2", "bbb");
+            xml.writeAttribute("type 3", "cccc");
+
+            xml.writeStartElement("script");
+            xml.writeEndElement();
+
+        //    xml.writeAttribute("x", QString::number(object->position.x()));
+        //    xml.writeAttribute("y", QString::number(object->position.y()));
+        //    xml.writeAttribute("width", QString::number(object->width));
+        //    xml.writeAttribute("height", QString::number(object->height));
+        //    xml.writeAttribute("color", object->color.name());
+        //    xml.writeAttribute("fillColor", object->fillColor.name());
+            xml.writeEndElement();
+        //}
+        xml.writeEndElement();
+
+        xml.writeEndElement();
+        xml.writeEndDocument();
+
+        file.close();
     }
 }

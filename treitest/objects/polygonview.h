@@ -13,11 +13,13 @@ namespace trei
 {
     class PolygonView: public ObjectView
     {
+        Q_OBJECT
+
         public:
-            explicit PolygonView();
+            explicit PolygonView() = default;
             explicit PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                                    const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
-            ~PolygonView();
+            ~PolygonView() = default;
 
             void addCoord(const QPointF &coord);
             void setCoords(const QVector<QPointF> &coords);

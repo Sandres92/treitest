@@ -1,0 +1,19 @@
+<window name="Экран0" color="0xd3d3d3ff" type="0" windowheight="600" windowwidth="800" usepassword="false" password="" groupname="" subgroupname="" posx="-1000" posy="-1000" accesslevel="0">
+     <objects>
+        <objectView class="EllipseView" name="Эллипс" posx="71.0" posy="53.0" width="75.0" height="75.0" angle="0" lock="false" color="0x000000ff" linewidth="2" fill="true" fillcolor="0xcc3333ff">
+           <scripts/>
+        </objectView>
+        <objectView class="RectangleView" name="Прямоугольник" posx="253.0" posy="189.0" width="75.0" height="75.0" angle="0" lock="false" color="0x0000000ff" linewidth="2" fill="true" fillcolor="0x4d804dff">
+           <scripts/>
+        </objectView>
+        <objectView class="PolygonView" name="Полигон" posx="527.0" posy="270.0" width="118.0" height="98.0" angle="0" lock="false" color="0x000000ff" linewidth="2" fill="true" fillcolor="0x334db3ff">
+           <scripts/>
+           <coordinates>
+              <coordinate coordx="0.0" coordy="49.0"/>
+              <coordinate coordx="59.0" coordy="0.0"/>
+              <coordinate coordx="118.0" coordy="73.5"/>
+              <coordinate coordx="59.0" coordy="98.0"/>
+           </coordinates>
+        </objectView>
+     </objects>
+</window>

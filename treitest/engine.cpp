@@ -1,18 +1,27 @@
 #include "engine.h"
 
 namespace trei {
-    Engine::Engine() {}
+    Engine::Engine()
+    {
+
+    }
 
     Engine::~Engine() {
 
     }
 
     void Engine::init() {
-        parseWindow();
+        loadXML();
+        saveXML();
     }
 
-    void Engine::parseWindow()
+    void Engine::loadXML()
     {
         xMLParser.load();
+    }
+
+    void Engine::saveXML()
+    {
+        xMLParser.save();
     }
 }

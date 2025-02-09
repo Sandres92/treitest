@@ -32,4 +32,15 @@ namespace trei
 
         return polygonView;
     }
+
+    const QByteArray PolygonViewFactory::toXML() const
+    {
+        QByteArray buffer;
+        QXmlStreamWriter xml(&buffer);
+        xml.writeStartElement("objectView");
+        xml.writeAttribute("class", "RectangleView");
+        xml.writeAttribute("name", "b");
+        xml.writeEndElement();
+        return buffer;
+    }
 }

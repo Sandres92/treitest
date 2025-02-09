@@ -8,7 +8,8 @@ namespace trei
     class PolygonViewFactory: public ObjectViewFactory
     {
         public:
-            ObjectView* createObjectView(QXmlStreamReader &xml) override;
+            ObjectView *createObjectView(QXmlStreamReader &xml) override;
+            const QByteArray toXML() const override;
     };
 }
 #endif // POLYGONVIEWFACTORY_H

@@ -9,8 +9,8 @@ namespace trei {
     class XMLParser
     {
         public:
-            XMLParser();
-            ~XMLParser();
+            XMLParser() = default;
+            ~XMLParser() = default;
 
             void load();
             void save();
