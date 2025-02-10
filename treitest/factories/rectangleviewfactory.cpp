@@ -8,5 +8,4 @@ namespace trei
     {
         return createCommonObjectView<RectangleView>(xml);
     }
-
 }

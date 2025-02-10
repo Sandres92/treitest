@@ -4,7 +4,7 @@
 
 namespace trei
 {
-    const QByteArray ObjectViewFactory::objectViewtoXML(const ObjectView &objectView) const
+    const QByteArray ObjectViewFactory::objectViewToXML(const ObjectView &objectView) const
     {
         QByteArray buffer;
         QXmlStreamWriter xml(&buffer);
@@ -29,5 +29,10 @@ namespace trei
 
         xml.writeEndElement();
         return buffer;
+    }
+
+    void ObjectViewFactory::addAdditionalXMLElements(const ObjectView &objectView, QXmlStreamWriter &xml) const
+    {
+
     }
 }

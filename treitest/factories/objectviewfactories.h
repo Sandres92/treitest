@@ -2,8 +2,8 @@
 #define OBJECTVIEWFACTORIES_H
 
 #include <QString>
-#include "factories/objectviewfactory.h"
-#include "window.h"
+#include "objectviewfactory.h"
+#include "windowfactory.h"
 
 namespace trei {
     class ObjectViewFactories
@@ -16,7 +16,9 @@ namespace trei {
             ObjectView *createObjectView(const QString &className, QXmlStreamReader &xml);
 
         private:
+            WindowFactory windowFactory;
             QMap<QString, ObjectViewFactory*> factories;
+
     };
 }
 #endif // OBJECTVIEWFACTORIES_H

@@ -9,9 +9,4 @@ namespace trei
         EllipseView* ellipseView = createCommonObjectView<EllipseView>(xml);
         return ellipseView;
     }
-
-    const QByteArray EllipseViewFactory::toXML() const
-    {
-        return nullptr;
-    }
 }

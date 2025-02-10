@@ -13,6 +13,7 @@ SOURCES += \
         factories/objectviewfactory.cpp \
         factories/polygonviewfactory.cpp \
         factories/rectangleviewfactory.cpp \
+        factories/windowfactory.cpp \
         objects/objectview.cpp \
         objects/ellipseview.cpp \
         objects/polygonview.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
             factories/objectviewfactory.h \
             factories/polygonviewfactory.h \
             factories/rectangleviewfactory.h \
+            factories/windowfactory.h \
             objects/objectview.h \
             objects/ellipseview.h \
             objects/polygonview.h \

@@ -9,14 +9,15 @@
 
 namespace trei
 {
-    void XMLParser::load()
+    QList<Window*> XMLParser::load()
     {
         QFile file(":/resources/figure.xml");
+        QList<Window*> windows;
 
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             qDebug() << "Error open file to read! Error = " << file.errorString();
-            return;
+            return windows;
         }
 
         QXmlStreamReader xml(&file);
@@ -36,6 +37,7 @@ namespace trei
                 if (xml.name() == "window")
                 {
                     window = objectViewFactories.createWindow(xml);
+                    windows.append(window);
 
                     continue;
                 }
@@ -76,12 +78,17 @@ namespace trei
             }
         }
 
-        window->show();
+        for(int i = 0; i < windows.size(); i++)
+        {
+            windows[i]->show();
+        }
 
         file.close();
+
+        return windows;
     }
 
-    void XMLParser::save()
+    void XMLParser::save(QList<Window*> windows) const
     {
         QString filePath = QDir::currentPath() + "/figure_copy_copy.xml";
         qDebug() << filePath;
@@ -92,6 +99,7 @@ namespace trei
         if (!fileInfo.exists())
         {
             qDebug() << "File for write not exist";
+            //TODO: create file
         }
 
         if (!file.open(QIODevice::WriteOnly))
@@ -100,11 +108,15 @@ namespace trei
             return;
         }
 
-
         QXmlStreamWriter xml(&file);
 
         xml.setAutoFormatting(true);
         xml.writeStartDocument();
+
+        for(int i = 0; i < windows.size(); i++)
+        {
+
+        }
         xml.writeStartElement("scene");
 
         //for (SceneObject *object : objects)
@@ -128,6 +140,7 @@ namespace trei
         xml.writeEndElement();
 
         xml.writeEndElement();
+
         xml.writeEndDocument();
 
         file.close();

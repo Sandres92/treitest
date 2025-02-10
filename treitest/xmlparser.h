@@ -12,8 +12,8 @@ namespace trei {
             XMLParser() = default;
             ~XMLParser() = default;
 
-            void load();
-            void save();
+            QList<Window*> load();
+            void save(QList<Window*>) const;
 
         private:
             ObjectViewFactories objectViewFactories;

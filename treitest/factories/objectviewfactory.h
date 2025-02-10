@@ -16,7 +16,7 @@ namespace trei
         virtual ~ObjectViewFactory() = default;
 
         virtual ObjectView *createObjectView(QXmlStreamReader &xml) = 0;
-        const QByteArray objectViewtoXML(const ObjectView &objectView) const;
+        const QByteArray objectViewToXML(const ObjectView &objectView) const;
 
     protected:
         template <typename T>
