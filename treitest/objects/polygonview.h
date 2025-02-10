@@ -15,21 +15,22 @@ namespace trei
     {
         Q_OBJECT
 
-        public:
-            explicit PolygonView() = default;
-            explicit PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
-                                   const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
-            ~PolygonView() = default;
+    public:
+        explicit PolygonView() = default;
+        explicit PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
+                             const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
+        ~PolygonView() = default;
 
-            void addCoord(const QPointF &coord);
-            void setCoords(const QVector<QPointF> &coords);
+        void setCoords(const QVector<QPointF> &coords);
+        void addCoord(const QPointF &coord);
+        QVector<QPointF> getCoords() const;
 
-        protected:
-            void paintEvent(QPaintEvent *) override;
-            void mousePressEvent(QMouseEvent *event) override;
+    protected:
+        void paintEvent(QPaintEvent *) override;
+        void mousePressEvent(QMouseEvent *event) override;
 
-        private:
-            QVector<QPointF> coords;
+    private:
+        QVector<QPointF> coords;
     };
 }
 #endif // POLYGONVIEW_H

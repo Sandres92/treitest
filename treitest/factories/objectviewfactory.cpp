@@ -1,10 +1,13 @@
 #include "objectviewfactory.h"
 
+#include <QXmlStreamWriter>
+
 namespace trei
 {
-    QXmlStreamAttributes ObjectViewFactory::fillCommonAttributes(const ObjectView &objectView)
+    const QByteArray ObjectViewFactory::objectViewtoXML(const ObjectView &objectView) const
     {
-        QXmlStreamWriter xml;
+        QByteArray buffer;
+        QXmlStreamWriter xml(&buffer);
         xml.writeStartElement("objectView");
         xml.writeAttribute("class", objectView.metaObject()->className());
         xml.writeAttribute("name", objectView.getName());
@@ -18,6 +21,13 @@ namespace trei
         xml.writeAttribute("linewidth", QString::number(objectView.getLineWidth()));
         xml.writeAttribute("fill", Convector::boolToString(objectView.getFill()));
         xml.writeAttribute("fillcolor", Convector::colorToHexColorString(objectView.getFillColor()));
+
+        xml.writeStartElement("scripts");
         xml.writeEndElement();
+
+        addAdditionalXMLElements(objectView, xml);
+
+        xml.writeEndElement();
+        return buffer;
     }
 }
