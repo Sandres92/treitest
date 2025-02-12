@@ -36,7 +36,17 @@ namespace trei
 
     void Window::mousePressEvent(QMouseEvent *event)
     {
-        qDebug() << "Window::mousePressEvent";
+        for (ObjectView *obj : objectViews) {
+            obj->unselect();
+        }
+
+        //for (ObjectView *obj : objectViews) {
+        //    if (obj->geometry().contains(event->pos())) {
+        //        //selectedObject = obj;
+        //        qDebug() << "Объект выбран:" << obj;
+        //        break;
+        //    }
+        //}
     }
 
     void Window::setName(const QString &name)
