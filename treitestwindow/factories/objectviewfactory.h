@@ -17,6 +17,7 @@ namespace trei
 
         virtual ObjectView *createObjectView(QXmlStreamReader &xml) = 0;
         const QByteArray objectViewToXML(const ObjectView &objectView) const;
+        void fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml);
 
     protected:
         template <typename T>
@@ -43,7 +44,7 @@ namespace trei
                          lock, lineColor, lineWidth, fill, fillColor);
         }
 
-        virtual void addAdditionalXMLElements(const ObjectView &objectView, QXmlStreamWriter &xml) const;
+        virtual void addAdditionalXMLElements(const ObjectView &objectView, QXmlStreamWriter &xml) const ;
     };
 }
 #endif // OBJECTVIEWFACTORY_H

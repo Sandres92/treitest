@@ -9,11 +9,11 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    factories/factories.cpp \
     main.cpp \
     mainwindow.cpp \
     engine.cpp \
     factories/ellipseviewfactory.cpp \
-    factories/objectviewfactories.cpp \
     factories/objectviewfactory.cpp \
     factories/polygonviewfactory.cpp \
     factories/rectangleviewfactory.cpp \
@@ -26,10 +26,10 @@ SOURCES += \
     xmlparser.cpp
 
 HEADERS += \
+    factories/factories.h \
     mainwindow.h \
     engine.h \
     factories/ellipseviewfactory.h \
-    factories/objectviewfactories.h \
     factories/objectviewfactory.h \
     factories/polygonviewfactory.h \
     factories/rectangleviewfactory.h \

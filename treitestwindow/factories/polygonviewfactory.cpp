@@ -44,7 +44,7 @@ namespace trei
 
         if (polygonView)
         {
-            xml.writeStartElement("objectView");
+            xml.writeStartElement("coordinates");
             QVector<QPointF> coords = polygonView->getCoords();
 
             for (int i = 0; i < coords.size(); i++)

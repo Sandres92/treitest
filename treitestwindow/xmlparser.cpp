@@ -9,10 +9,10 @@
 
 namespace trei
 {
-    QList<Window*> XMLParser::load()
+    QList<Window *> XMLParser::load()
     {
         QFile file(":/resources/figure.xml");
-        QList<Window*> windows;
+        QList<Window *> windows;
 
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
@@ -36,7 +36,7 @@ namespace trei
             {
                 if (xml.name() == "window")
                 {
-                    window = objectViewFactories.createWindow(xml);
+                    window = factories.createWindow(xml);
                     windows.append(window);
 
                     continue;
@@ -45,17 +45,7 @@ namespace trei
                 if (xml.name() == "objectView")
                 {
                     QString className = xml.attributes().value("class").toString();
-                    ObjectView *objectView = objectViewFactories.createObjectView(className, xml);
-
-                    QString str = typeid(*objectView).name();
-                    QString str2 = objectView->metaObject()->className();
-                    int ind2 = str2.lastIndexOf("::") + 2;
-                    QString str3 = "A::B::PolygonView";
-                    int ind3 = str3.lastIndexOf("::") + 2;
-                    QString subString2 = str2.mid(ind2); //
-                    QString subString3 = str3.mid(ind3); // subString contains "is"
-                    qDebug() << str << " | " << str2 << " = " << ind2 << " | " << str3 << " = " << ind3;
-                    qDebug() << subString2 << " | " << subString3;
+                    ObjectView *objectView = factories.createObjectView(className, xml);
 
                     if (objectView != nullptr)
                     {
@@ -78,7 +68,7 @@ namespace trei
             }
         }
 
-        for(int i = 0; i < windows.size(); i++)
+        for (int i = 0; i < windows.size(); i++)
         {
             windows[i]->show();
         }
@@ -88,7 +78,7 @@ namespace trei
         return windows;
     }
 
-    void XMLParser::save(QList<Window*> windows) const
+    void XMLParser::save(QList<Window *> windows)
     {
         QString filePath = QDir::currentPath() + "/figure_copy_copy.xml";
         qDebug() << filePath;
@@ -109,40 +99,28 @@ namespace trei
         }
 
         QXmlStreamWriter xml(&file);
-
         xml.setAutoFormatting(true);
-        xml.writeStartDocument();
+        //xml.writeStartDocument();
 
-        for(int i = 0; i < windows.size(); i++)
+        for (int i = 0; i < windows.size(); i++)
         {
-            QByteArray partXml = objectViewFactories.windowToXML(*windows[i]);
-            file.write(partXml);
+            xml.writeStartElement("window");
+            factories.fillXMLAttributeForWindow(*windows[i], xml);
+
+            QList<ObjectView *> objectViews = windows[i]->getObjectViews();
+
+            for (int j = 0; j < objectViews.size(); j++)
+            {
+                xml.writeStartElement("objectView");
+                factories.fillXMLAttributeForObjectView(*objectViews[j], xml);
+                xml.writeEndElement();
+            }
+
+            //QByteArray partXml = factories.windowToXML(*windows[i]);
+            //file.write(partXml);
+
+            xml.writeEndElement();
         }
-        xml.writeEndDocument();
-
-        //xml.writeStartElement("scene");
-
-        ////for (SceneObject *object : objects)
-        ////{
-        //xml.writeStartElement("object");
-        //xml.writeAttribute("type 1", "aa");
-        //xml.writeAttribute("type 2", "bbb");
-        //xml.writeAttribute("type 3", "cccc");
-
-        //xml.writeStartElement("script");
-        //xml.writeEndElement();
-
-        ////    xml.writeAttribute("x", QString::number(object->position.x()));
-        ////    xml.writeAttribute("y", QString::number(object->position.y()));
-        ////    xml.writeAttribute("width", QString::number(object->width));
-        ////    xml.writeAttribute("height", QString::number(object->height));
-        ////    xml.writeAttribute("color", object->color.name());
-        ////    xml.writeAttribute("fillColor", object->fillColor.name());
-        //xml.writeEndElement();
-        ////}
-        //xml.writeEndElement();
-
-        //xml.writeEndElement();
 
         //xml.writeEndDocument();
 

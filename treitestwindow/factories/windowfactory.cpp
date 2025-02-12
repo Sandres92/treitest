@@ -6,13 +6,15 @@ namespace trei
 {
     Window *WindowFactory::createWindow(const QXmlStreamReader &xml)
     {
-        auto isOutOfDesktop = [](const QWidget &w) {
+        auto isOutOfDesktop = [](const QWidget & w)
+        {
             QDesktopWidget *desktopWidget = QApplication::desktop();
             const QRect screenRect = desktopWidget->screenGeometry(&w);
             const QPoint topLeft = w.mapToGlobal(w.geometry().topLeft());
             const QPoint bottomRight = w.mapToGlobal(w.geometry().bottomRight());
 
-            if(!screenRect.contains(topLeft) || !screenRect.contains(bottomRight)){
+            if (!screenRect.contains(topLeft) || !screenRect.contains(bottomRight))
+            {
                 return true;
             }
 
@@ -37,10 +39,10 @@ namespace trei
 
         const int accessLevel = xml.attributes().value("accesslevel").toInt();
 
-        Window *window = new Window(name, color, type, windowWidth, windowHeight, windowWidth,
+        Window *window = new Window(name, color, type, windowWidth, windowHeight, usePassword,
                                     password, groupName, subGroupName, posx, posy, accessLevel);
 
-        if(isOutOfDesktop(*window))
+        if (isOutOfDesktop(*window))
         {
             window->move(0, 0);
         }
@@ -48,10 +50,11 @@ namespace trei
         return window;
     }
 
-    const QByteArray WindowFactory::windowToXML(const Window &window) const
+    const QByteArray WindowFactory::windowToXML(const Window &window, const QByteArray &additionalByteArray) const
     {
         QByteArray buffer;
         QXmlStreamWriter xml(&buffer);
+        xml.setAutoFormatting(true);
 
         xml.writeStartElement("window");
 
@@ -68,8 +71,29 @@ namespace trei
         xml.writeAttribute("posy", QString::number(window.getPosy()));
         xml.writeAttribute("accesslevel", QString::number(window.getAccessLevel()));
 
+        xml.writeStartElement("scripts");
+        xml.writeEndElement();
+
+        buffer.append(additionalByteArray);
+
         xml.writeEndElement();
 
         return buffer;
+    }
+
+    void WindowFactory::fillWindowXMLAttribute(const Window &window, QXmlStreamWriter &xml)
+    {
+        xml.writeAttribute("name", window.getName());
+        xml.writeAttribute("color", Convector::colorToHexColorString(window.getColor()));
+        xml.writeAttribute("type", QString::number(window.getType()));
+        xml.writeAttribute("windowheight", QString::number(window.getWindowHeight()));
+        xml.writeAttribute("windowwidth", QString::number(window.getWindowWidth()));
+        xml.writeAttribute("usepassword", Convector::boolToString(window.getUsePassword()));
+        xml.writeAttribute("password", window.getPassword());
+        xml.writeAttribute("groupname", window.getGroupName());
+        xml.writeAttribute("subgroupname", window.getSubGroupName());
+        xml.writeAttribute("posx", QString::number(window.getPosx()));
+        xml.writeAttribute("posy", QString::number(window.getPosy()));
+        xml.writeAttribute("accesslevel", QString::number(window.getAccessLevel()));
     }
 }

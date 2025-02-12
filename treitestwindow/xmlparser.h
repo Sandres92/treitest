@@ -3,20 +3,21 @@
 
 #include <QMap>
 #include <QString>
-#include "factories/objectviewfactories.h"
+#include "factories/factories.h"
 
-namespace trei {
+namespace trei
+{
     class XMLParser
     {
-        public:
-            XMLParser() = default;
-            ~XMLParser() = default;
+    public:
+        XMLParser() = default;
+        ~XMLParser() = default;
 
-            QList<Window*> load();
-            void save(QList<Window*>) const;
+        QList<Window *> load();
+        void save(QList<Window *> windows);
 
-        private:
-            ObjectViewFactories objectViewFactories;
+    private:
+        Factories factories;
     };
 }
 #endif // XMLPARSER_H

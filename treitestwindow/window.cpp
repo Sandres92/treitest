@@ -1,6 +1,7 @@
 #include "window.h"
 
-namespace trei {
+namespace trei
+{
     Window::Window(QWidget *parent)
         : QWidget(parent)
     {
@@ -10,8 +11,8 @@ namespace trei {
                    bool usePassword, const QString &password, const QString &groupName, const QString &subGroupName,
                    int posx, int posy, int accessLevel, QWidget *parent)
         : QWidget(parent), name(name), color(color), type(type),  windowWidth(windowWidth), windowHeight(windowHeight),
-        usePassword(usePassword),  password(password), groupName(groupName), subGroupName(subGroupName),
-        posx(posx), posy(posy), accessLevel(accessLevel)
+          usePassword(usePassword),  password(password), groupName(groupName), subGroupName(subGroupName),
+          posx(posx), posy(posy), accessLevel(accessLevel)
     {
         setWindowTitle(name);
         resize(windowWidth, windowHeight);
@@ -149,5 +150,10 @@ namespace trei {
     {
         objectViews.append(objectView);
         objectView->setParent(this);
+    }
+
+    const QList<ObjectView *> Window::getObjectViews() const
+    {
+        return objectViews;
     }
 }

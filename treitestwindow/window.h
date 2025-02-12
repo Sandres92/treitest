@@ -7,7 +7,8 @@
 #include "objects/objectview.h"
 #include <QList>
 
-namespace trei {
+namespace trei
+{
     class Window : public QWidget
     {
         Q_OBJECT
@@ -48,6 +49,7 @@ namespace trei {
         int getAccessLevel() const;
 
         void addObjectView(ObjectView *objectView);
+        const QList<ObjectView *> getObjectViews() const;
 
     private:
         QString name;
@@ -63,7 +65,7 @@ namespace trei {
         int posy;
         int accessLevel;
 
-        QList<ObjectView*> objectViews;
+        QList<ObjectView *> objectViews;
     };
 }
 #endif // WINDOW_H
