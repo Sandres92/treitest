@@ -14,6 +14,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Создаем действия для меню
+    QAction *copyAction = new QAction("Копировать", this);
+    QAction *pasteAction = new QAction("Вставить", this);
+
+    // Подключаем действия к слотам
+    connect(copyAction, &QAction::triggered, this, &MainWindow::copy);
+    connect(pasteAction, &QAction::triggered, this, &MainWindow::paste);
+
     initHotKey();
     init();
 }
@@ -22,10 +30,15 @@ MainWindow::~MainWindow()
 {
     delete keyCtrlS;
     delete keyCtrlZ;
+    delete keyCtrlD;
+    delete keyCtrlC;
+    delete keyCtrlV;
+
     delete ui;
 }
 
-void MainWindow::init() {
+void MainWindow::init()
+{
     loadXML();
 }
 
@@ -38,8 +51,19 @@ void MainWindow::initHotKey()
     keyCtrlZ = new QShortcut(this);
     keyCtrlZ->setKey(Qt::CTRL + Qt::Key_Z);
     connect(keyCtrlZ, SIGNAL(activated()), this, SLOT(slotShortcutCtrlZ()));
-}
 
+    keyCtrlD = new QShortcut(this);
+    keyCtrlD->setKey(Qt::CTRL + Qt::Key_D);
+    connect(keyCtrlD, SIGNAL(activated()), this, SLOT(slotShortcutCtrlD()));
+
+    keyCtrlC = new QShortcut(this);
+    keyCtrlC->setKey(Qt::CTRL + Qt::Key_C);
+    connect(keyCtrlC, SIGNAL(activated()), this, SLOT(copy()));
+
+    keyCtrlV = new QShortcut(this);
+    keyCtrlV->setKey(Qt::CTRL + Qt::Key_V);
+    connect(keyCtrlV, SIGNAL(activated()), this, SLOT(paste()));
+}
 
 void MainWindow::slotShortcutCtrlS()
 {
@@ -52,6 +76,11 @@ void MainWindow::slotShortcutCtrlZ()
     qDebug() << "ctrl + Z";
 }
 
+void MainWindow::slotShortcutCtrlD()
+{
+    qDebug() << "ctrl + D";
+}
+
 void MainWindow::loadXML()
 {
     windows = xMLParser.load();
@@ -60,4 +89,28 @@ void MainWindow::loadXML()
 void MainWindow::saveXML()
 {
     xMLParser.save(windows);
+}
+
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    // Создаем контекстное меню
+    QMenu menu(this);
+    menu.addAction("Копировать", this, &MainWindow::copy);
+    menu.addAction("Вставить", this, &MainWindow::paste);
+    menu.addSeparator();
+
+    menu.addAction("Дублировать", this, &MainWindow::copy);
+
+    // Отображаем меню в позиции курсора
+    menu.exec(event->globalPos());
+}
+
+void MainWindow::copy()
+{
+    qDebug() << "copy";
+}
+
+void MainWindow::paste()
+{
+    qDebug() << "past";
 }

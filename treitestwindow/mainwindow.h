@@ -5,8 +5,9 @@
 #include "xmlparser.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+    class MainWindow;
 }
 QT_END_NAMESPACE
 
@@ -20,9 +21,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    void contextMenuEvent(QContextMenuEvent *event) override;
+
 private slots:
     void slotShortcutCtrlS();
     void slotShortcutCtrlZ();
+    void slotShortcutCtrlD();
+
+    void copy();
+    void paste();
 
 private:
     Ui::MainWindow *ui;
@@ -31,10 +39,15 @@ private:
     void saveXML();
 
     XMLParser xMLParser;
-    QList<Window*> windows;
+    QList<Window *> windows;
 
     QShortcut *keyCtrlS;
     QShortcut *keyCtrlZ;
+
+    QShortcut *keyCtrlD;
+    QShortcut *keyCtrlC;
+    QShortcut *keyCtrlV;
+
     void initHotKey();
     void saveWindow();
     void saveAllWindow();

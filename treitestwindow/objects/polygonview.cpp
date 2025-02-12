@@ -45,8 +45,18 @@ namespace trei
 
     void PolygonView::setCoords(const QVector<QPointF> &coords)
     {
-
         this->coords = coords;
         repaint();
+    }
+
+    PolygonView *PolygonView::clone()
+    {
+        PolygonView *newObjectView = new PolygonView(this->name, this->posx, this->posy, this->width,
+                                                     this->height, this->angle, this->lock, this->lineColor,
+                                                     this->lineWidth, this->fill, this->fillColor);
+        newObjectView->setParent(this->parentWidget());
+        newObjectView->setCoords(this->coords);
+
+        return newObjectView;
     }
 }

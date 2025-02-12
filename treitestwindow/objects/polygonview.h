@@ -24,6 +24,7 @@ namespace trei
         void setCoords(const QVector<QPointF> &coords);
         void addCoord(const QPointF &coord);
         QVector<QPointF> getCoords() const;
+        PolygonView *clone() override;
 
     protected:
         void paintEvent(QPaintEvent *) override;

@@ -1,6 +1,8 @@
 #include "objectview.h"
 #include "QDebug"
 
+#include <QMenu>
+
 namespace trei
 {
     ObjectView::ObjectView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
@@ -124,5 +126,14 @@ namespace trei
     QColor ObjectView::getFillColor() const
     {
         return fillColor;
+    }
+
+    ObjectView *ObjectView::clone()
+    {
+        ObjectView *newObjectView = new ObjectView(this->name, this->posx, this->posy, this->width,
+                                                   this->height, this->angle, this->lock, this->lineColor,
+                                                   this->lineWidth, this->fill, this->fillColor);
+        newObjectView->setParent(this->parentWidget());
+        return newObjectView;
     }
 }

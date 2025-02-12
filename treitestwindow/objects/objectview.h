@@ -16,8 +16,9 @@ namespace trei
         explicit ObjectView() = default;
         explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
                             int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
-
         virtual ~ObjectView() = default;
+
+        virtual ObjectView *clone();
 
         void setName(const QString &name);
         QString getName() const;
@@ -44,7 +45,13 @@ namespace trei
         void setFillColor(const QColor &fillColor);
         QColor getFillColor() const;
 
+    private slots:
+        void copy();
+        void paste();
+
     protected:
+        void contextMenuEvent(QContextMenuEvent *event) override;
+
         QString name;
         float posx;
         float posy;
