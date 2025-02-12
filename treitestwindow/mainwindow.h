@@ -21,16 +21,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
-    void contextMenuEvent(QContextMenuEvent *event) override;
-
 private slots:
     void slotShortcutCtrlS();
     void slotShortcutCtrlZ();
     void slotShortcutCtrlD();
-
-    void copy();
-    void paste();
 
 private:
     Ui::MainWindow *ui;

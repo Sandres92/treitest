@@ -28,7 +28,7 @@ namespace trei
 
     protected:
         void paintEvent(QPaintEvent *) override;
-        void mousePressEvent(QMouseEvent *event) override;
+        void mousePressEventHandler() override;
 
     private:
         QVector<QPointF> coords;

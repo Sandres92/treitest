@@ -27,7 +27,7 @@ namespace trei
         painter.drawPolygon(polygon);
     }
 
-    void PolygonView::mousePressEvent(QMouseEvent *event)
+    void PolygonView::mousePressEventHandler()
     {
         qDebug() << "EllipseView::mousePressEvent";
     }

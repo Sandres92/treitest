@@ -9,13 +9,10 @@ namespace trei
     EllipseView::EllipseView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
         : ObjectView(name, posx, posy, width, height, angle, lock, lineColor, linewidth, fill, fillColor)
-    {
-
-    }
+    { }
 
     EllipseView::~EllipseView()
-    {
-    }
+    { }
 
     void EllipseView::paintEvent(QPaintEvent *)
     {
@@ -30,11 +27,11 @@ namespace trei
 
         painter.setRenderHint(QPainter::Antialiasing);
 
-        QRect ellipse(0.f, 0.f, width, height);
+        QRect ellipse(lineWidth/2.f, lineWidth/2.f, width-lineWidth/2.f, height-lineWidth/2.f);
         painter.drawEllipse(ellipse);
     }
 
-    void EllipseView::mousePressEvent(QMouseEvent *event)
+    void EllipseView::mousePressEventHandler()
     {
         qDebug() << "EllipseView::mousePressEvent  " << metaObject()->className();
     }

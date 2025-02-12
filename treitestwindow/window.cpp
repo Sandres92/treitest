@@ -26,6 +26,19 @@ namespace trei
         qDeleteAll(objectViews);
     }
 
+    void Window::contextMenuEvent(QContextMenuEvent *event)
+    {
+        QMenu menu(this);
+        menu.addAction("Вставить", this, &Window::paste);
+
+        menu.exec(event->globalPos());
+    }
+
+    void Window::mousePressEvent(QMouseEvent *event)
+    {
+        qDebug() << "Window::mousePressEvent";
+    }
+
     void Window::setName(const QString &name)
     {
         this->name = name;
@@ -155,5 +168,18 @@ namespace trei
     const QList<ObjectView *> Window::getObjectViews() const
     {
         return objectViews;
+    }
+
+    void Window::copy()
+    {
+        qDebug() << "copy";
+    }
+    void Window::paste()
+    {
+        qDebug() << "past";
+    }
+    void Window::duplicate()
+    {
+        qDebug() << "duplicate";
     }
 }

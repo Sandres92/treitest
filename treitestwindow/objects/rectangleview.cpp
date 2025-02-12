@@ -7,9 +7,7 @@ namespace trei
     RectangleView::RectangleView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                                  const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor)
         :ObjectView(name, posx, posy, width, height, angle, lock, lineColor, lineWidth, fill, fillColor)
-    {
-
-    }
+    { }
 
     void RectangleView::paintEvent(QPaintEvent *) {
         QPainter painter(this);
@@ -21,7 +19,7 @@ namespace trei
 
         painter.setPen(QPen(lineColor, lineWidth));
 
-        QRect rect (0.f, 0.f, width, height);
+        QRect rect (lineWidth/2.f, lineWidth/2.f, width-lineWidth/2.f, height-lineWidth/2.f);
 
         //QPolygonF rect;
         //rect << QPointF(0.f, 0.f)
@@ -33,8 +31,17 @@ namespace trei
         painter.drawRect(rect);
     }
 
-    void RectangleView::mousePressEvent(QMouseEvent *event)
+    void RectangleView::mousePressEventHandler()
     {
         qDebug() <<"RectangleView::mousePressEvent";
+    }
+
+    RectangleView *RectangleView::clone()
+    {
+        RectangleView *newObjectView = new RectangleView(this->name, this->posx, this->posy, this->width,
+                                                   this->height, this->angle, this->lock, this->lineColor,
+                                                   this->lineWidth, this->fill, this->fillColor);
+        newObjectView->setParent(this->parentWidget());
+        return newObjectView;
     }
 }

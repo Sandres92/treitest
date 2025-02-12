@@ -51,6 +51,15 @@ namespace trei
         void addObjectView(ObjectView *objectView);
         const QList<ObjectView *> getObjectViews() const;
 
+    protected:
+        void contextMenuEvent(QContextMenuEvent *event) override;
+        void mousePressEvent(QMouseEvent *event) override;
+
+    private slots:
+        void copy();
+        void paste();
+        void duplicate();
+
     private:
         QString name;
         QColor color;

@@ -2,9 +2,16 @@
 #include "QDebug"
 
 #include <QMenu>
+#include <QMouseEvent>
+#include <QRect>
 
 namespace trei
 {
+    ObjectView::ObjectView()
+    {
+        init();
+    }
+
     ObjectView::ObjectView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                            const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor)
         : name(name), posx(posx), posy(posy), width(width), height(height), angle(angle), lock(lock),
@@ -12,6 +19,13 @@ namespace trei
     {
         resize(width + lineWidth, height + lineWidth);
         move(posx, posy);
+        init();
+    }
+
+    void ObjectView::init()
+    {
+        rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+        rubberBand->setGeometry(QRect(-1.f, -1.f, width + 1.f, height + 1.f));
     }
 
     void ObjectView::setName(const QString &name)
@@ -128,12 +142,53 @@ namespace trei
         return fillColor;
     }
 
-    ObjectView *ObjectView::clone()
+    void ObjectView::contextMenuEvent(QContextMenuEvent *event)
     {
-        ObjectView *newObjectView = new ObjectView(this->name, this->posx, this->posy, this->width,
-                                                   this->height, this->angle, this->lock, this->lineColor,
-                                                   this->lineWidth, this->fill, this->fillColor);
-        newObjectView->setParent(this->parentWidget());
-        return newObjectView;
+        QMenu menu(this);
+        menu.addAction("Копировать", this, &ObjectView::copy);
+        menu.addSeparator();
+        menu.addAction("Дублировать", this, &ObjectView::duplicate);
+
+        menu.exec(event->globalPos());
+    }
+
+    void ObjectView::copy()
+    {
+        qDebug() << "copy";
+    }
+    void ObjectView::duplicate()
+    {
+        qDebug() << "duplicate";
+    }
+
+    void ObjectView::mousePressEvent(QMouseEvent *event)
+    {
+        mousePoint = event->globalPos();
+        mousePressEventHandler();
+
+        rubberBand->show();
+    }
+
+    void ObjectView::mouseMoveEvent(QMouseEvent *event)
+    {
+        const QPointF delta = event->globalPos() - mousePoint;
+        move(x()+delta.x(), y()+delta.y());
+        //oldPos = event->globalPos();
+        mousePoint = event->globalPos();
+    }
+
+    void ObjectView::mouseReleaseEvent(QMouseEvent *event)
+    {
+        qDebug() << "mouseReleaseEvent";
+    }
+
+    void ObjectView::select()
+    {
+        rubberBand->show();
+    }
+
+    void ObjectView::unselect()
+    {
+        rubberBand->hide();
     }
 }

@@ -14,14 +14,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // Создаем действия для меню
-    QAction *copyAction = new QAction("Копировать", this);
-    QAction *pasteAction = new QAction("Вставить", this);
-
-    // Подключаем действия к слотам
-    connect(copyAction, &QAction::triggered, this, &MainWindow::copy);
-    connect(pasteAction, &QAction::triggered, this, &MainWindow::paste);
-
     initHotKey();
     init();
 }
@@ -89,28 +81,4 @@ void MainWindow::loadXML()
 void MainWindow::saveXML()
 {
     xMLParser.save(windows);
-}
-
-void MainWindow::contextMenuEvent(QContextMenuEvent *event)
-{
-    // Создаем контекстное меню
-    QMenu menu(this);
-    menu.addAction("Копировать", this, &MainWindow::copy);
-    menu.addAction("Вставить", this, &MainWindow::paste);
-    menu.addSeparator();
-
-    menu.addAction("Дублировать", this, &MainWindow::copy);
-
-    // Отображаем меню в позиции курсора
-    menu.exec(event->globalPos());
-}
-
-void MainWindow::copy()
-{
-    qDebug() << "copy";
-}
-
-void MainWindow::paste()
-{
-    qDebug() << "past";
 }

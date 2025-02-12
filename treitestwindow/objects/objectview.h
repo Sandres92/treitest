@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QString>
 #include <QColor>
+#include <QRubberBand>
 
 namespace trei
 {
@@ -13,12 +14,12 @@ namespace trei
         Q_OBJECT
 
     public:
-        explicit ObjectView() = default;
+        explicit ObjectView();
         explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
                             int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
         virtual ~ObjectView() = default;
 
-        virtual ObjectView *clone();
+        virtual ObjectView *clone() = 0;
 
         void setName(const QString &name);
         QString getName() const;
@@ -45,12 +46,16 @@ namespace trei
         void setFillColor(const QColor &fillColor);
         QColor getFillColor() const;
 
-    private slots:
-        void copy();
-        void paste();
+        void select();
+        void unselect();
 
     protected:
+        void mousePressEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *evt) override;
+        void mouseReleaseEvent(QMouseEvent *event) override;
         void contextMenuEvent(QContextMenuEvent *event) override;
+
+        virtual void mousePressEventHandler() = 0;
 
         QString name;
         float posx;
@@ -63,6 +68,16 @@ namespace trei
         int lineWidth;
         bool fill;
         QColor fillColor;
+
+        QPoint mousePoint;
+        QRubberBand* rubberBand;
+
+    private slots:
+        void copy();
+        void duplicate();
+
+    private:
+        void init();
     };
 }
 #endif // OBJECTVIEW_H
