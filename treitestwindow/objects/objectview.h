@@ -17,6 +17,8 @@ namespace trei
         explicit ObjectView();
         explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
                             int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
+        explicit ObjectView(const ObjectView &other);
+
         virtual ~ObjectView() = default;
 
         virtual ObjectView *clone() = 0;
@@ -49,13 +51,36 @@ namespace trei
         void select();
         void unselect();
 
+        friend QDataStream &operator<<(QDataStream &out, ObjectView &objectView)
+        {
+            out << objectView.name << objectView.posx << objectView.posy << objectView.width <<
+                objectView.height << objectView.angle << objectView.lock << objectView.lineColor <<
+                objectView.lineWidth << objectView.fill << objectView.fillColor;
+            return out;
+        }
+
+        friend QDataStream &operator>>(QDataStream &in, ObjectView &objectView)
+        {
+            in >> objectView.name >> objectView.posx >> objectView.posy >> objectView.width >>
+                objectView.height >> objectView.angle >> objectView.lock >> objectView.lineColor >>
+                objectView.lineWidth >> objectView.fill >> objectView.fillColor;
+            return in;
+        }
+
+    signals:
+        void onObjectViewClick(ObjectView *objectView);
+        void onObjectViewCopy(ObjectView *originObjectView);
+        void onObjectViewDuplicate(ObjectView *newObjectView);
+
     protected:
         void mousePressEvent(QMouseEvent *event) override;
         void mouseMoveEvent(QMouseEvent *evt) override;
-        void mouseReleaseEvent(QMouseEvent *event) override;
+        void mouseReleaseEvent(QMouseEvent *) override;
         void contextMenuEvent(QContextMenuEvent *event) override;
 
         virtual void mousePressEventHandler() = 0;
+
+        void cloneCommonField(ObjectView &clonedObjectView);
 
         QString name;
         float posx;

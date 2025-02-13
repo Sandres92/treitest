@@ -8,9 +8,7 @@ namespace trei
     PolygonView::PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
         : ObjectView(name, posx, posy, width, height, angle, lock, lineColor, linewidth, fill, fillColor)
-    {
-
-    }
+    { }
 
     void PolygonView::paintEvent(QPaintEvent *)
     {

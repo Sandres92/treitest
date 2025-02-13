@@ -56,9 +56,14 @@ namespace trei
         void mousePressEvent(QMouseEvent *event) override;
 
     private slots:
-        void copy();
-        void paste();
-        void duplicate();
+        void paste(const QPoint &pos);
+        void onObjectViewClick(ObjectView * objectView);
+        void onObjectViewCopy(ObjectView * objectView);
+        void onObjectViewDuplicate(ObjectView * objectView);
+
+        void onHotKeyDuplicate();
+        void onHotKeyCopy();
+        void onHotKeyPaste();
 
     private:
         QString name;
@@ -75,6 +80,15 @@ namespace trei
         int accessLevel;
 
         QList<ObjectView *> objectViews;
+        ObjectView * selectedObjectView = nullptr;
+        void unselectObjectView(ObjectView * objectView);
+
+        ObjectView* copyObjectView = nullptr;
+
+        QShortcut *keyCtrlD;
+        QShortcut *keyCtrlC;
+        QShortcut *keyCtrlV;
+        void initHotKey();
     };
 }
 #endif // WINDOW_H

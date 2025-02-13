@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QMouseEvent>
 #include <QRect>
+#include <QDebug>
 
 namespace trei
 {
@@ -19,6 +20,17 @@ namespace trei
     {
         resize(width + lineWidth, height + lineWidth);
         move(posx, posy);
+
+        init();
+    }
+
+    ObjectView::ObjectView(const ObjectView &other)
+        : name(other.name), posx(other.posx), posy(other.posy), width(other.width), height(other.height), angle(other.angle), lock(other.lock),
+        lineColor(other.lineColor), lineWidth(other.lineWidth), fill(other.fill), fillColor(other.fillColor)
+    {
+        resize(width + lineWidth, height + lineWidth);
+        move(posx, posy);
+
         init();
     }
 
@@ -155,10 +167,13 @@ namespace trei
     void ObjectView::copy()
     {
         qDebug() << "copy";
+        emit onObjectViewCopy(this);
     }
+
     void ObjectView::duplicate()
     {
-        qDebug() << "duplicate";
+
+        emit onObjectViewDuplicate(this);
     }
 
     void ObjectView::mousePressEvent(QMouseEvent *event)
@@ -167,17 +182,23 @@ namespace trei
         mousePressEventHandler();
 
         rubberBand->show();
+        emit onObjectViewClick(this);
+
+        raise();
     }
 
     void ObjectView::mouseMoveEvent(QMouseEvent *event)
     {
         const QPointF delta = event->globalPos() - mousePoint;
         move(x()+delta.x(), y()+delta.y());
-        //oldPos = event->globalPos();
+
+        posx += delta.x();
+        posy += delta.y();
+
         mousePoint = event->globalPos();
     }
 
-    void ObjectView::mouseReleaseEvent(QMouseEvent *event)
+    void ObjectView::mouseReleaseEvent(QMouseEvent *)
     {
         qDebug() << "mouseReleaseEvent";
     }

@@ -5,6 +5,7 @@ namespace trei
     Window::Window(QWidget *parent)
         : QWidget(parent)
     {
+        initHotKey();
     }
 
     Window::Window(const QString &name, const QColor &color, int type, int windowWidth, int windowHeight,
@@ -19,17 +20,50 @@ namespace trei
         move(posx, posy);
 
         setStyleSheet("background-color:" + color.name() + ";");
+
+        initHotKey();
+    }
+
+    void Window::initHotKey()
+    {
+        keyCtrlD = new QShortcut(this);
+        keyCtrlD->setKey(Qt::CTRL + Qt::Key_D);
+        connect(keyCtrlD, SIGNAL(activated()), this, SLOT(onHotKeyDuplicate()));
+
+        keyCtrlC = new QShortcut(this);
+        keyCtrlC->setKey(Qt::CTRL + Qt::Key_C);
+        connect(keyCtrlC, SIGNAL(activated()), this, SLOT(onHotKeyCopy()));
+
+        keyCtrlV = new QShortcut(this);
+        keyCtrlV->setKey(Qt::CTRL + Qt::Key_V);
+        connect(keyCtrlV, SIGNAL(activated()), this, SLOT(onHotKeyPaste()));
     }
 
     Window::~Window()
     {
+        delete keyCtrlD;
+        delete keyCtrlC;
+        delete keyCtrlV;
+
+        selectedObjectView = nullptr;
+        copyObjectView = nullptr;
+
         qDeleteAll(objectViews);
     }
 
     void Window::contextMenuEvent(QContextMenuEvent *event)
     {
         QMenu menu(this);
-        menu.addAction("Вставить", this, &Window::paste);
+
+        QAction *pasteAction = menu.addAction("Вставить");
+        pasteAction->setData(event->pos());
+
+        //menu.addAction("Вставить", this, &Window::paste);
+
+        connect(pasteAction, &QAction::triggered, this, [this, pasteAction]() {
+            QPoint pos = pasteAction->data().toPoint();
+            paste(pos);
+        });
 
         menu.exec(event->globalPos());
     }
@@ -39,6 +73,7 @@ namespace trei
         for (ObjectView *obj : objectViews) {
             obj->unselect();
         }
+        selectedObjectView = nullptr;
 
         //for (ObjectView *obj : objectViews) {
         //    if (obj->geometry().contains(event->pos())) {
@@ -173,6 +208,11 @@ namespace trei
     {
         objectViews.append(objectView);
         objectView->setParent(this);
+        objectView->show();
+
+        connect(objectView, SIGNAL(onObjectViewClick(ObjectView *)), this, SLOT(onObjectViewClick(ObjectView *)));
+        connect(objectView, SIGNAL(onObjectViewCopy(ObjectView *)), this, SLOT(onObjectViewCopy(ObjectView *)));
+        connect(objectView, SIGNAL(onObjectViewDuplicate(ObjectView *)), this, SLOT(onObjectViewDuplicate(ObjectView *)));
     }
 
     const QList<ObjectView *> Window::getObjectViews() const
@@ -180,16 +220,94 @@ namespace trei
         return objectViews;
     }
 
-    void Window::copy()
+    void Window::onObjectViewClick(ObjectView * objectView)
     {
-        qDebug() << "copy";
+        if(objectView == selectedObjectView)
+        {
+            return;
+        }
+        unselectObjectView(objectView);
     }
-    void Window::paste()
+
+    void Window::unselectObjectView(ObjectView * objectView)
     {
-        qDebug() << "past";
+        if(selectedObjectView)
+        {
+            selectedObjectView->unselect();
+        }
+
+        selectedObjectView = objectView;
     }
-    void Window::duplicate()
+
+    void Window::onObjectViewCopy(ObjectView * objectView)
     {
-        qDebug() << "duplicate";
+        copyObjectView = objectView;
+    }
+
+    void Window::onObjectViewDuplicate(ObjectView * objectView)
+    {
+        ObjectView* newObjectView  = objectView->clone();
+        float posx = newObjectView->getPosx() + 10.f;
+        float posy = newObjectView->getPosy() + 10.f;
+
+        newObjectView->setPos(posx, posy);
+        newObjectView->select();
+
+        addObjectView(newObjectView);
+
+        unselectObjectView(newObjectView);
+    }
+
+    void Window::paste(const QPoint &pos)
+    {
+        if(!copyObjectView)
+        {
+            return;
+        }
+
+        ObjectView* newObjectView  = copyObjectView->clone();
+        float posx = pos.x();
+        float posy = pos.y();
+
+        newObjectView->setPos(posx, posy);
+        newObjectView->select();
+
+        addObjectView(newObjectView);
+
+        unselectObjectView(newObjectView);
+
+        copyObjectView = selectedObjectView;
+    }
+
+    void Window::onHotKeyDuplicate()
+    {
+        if(!selectedObjectView)
+        {
+            return;
+        }
+
+        onObjectViewDuplicate(selectedObjectView);
+    }
+
+    void Window::onHotKeyCopy()
+    {
+        if(!selectedObjectView)
+        {
+            return;
+        }
+        onObjectViewCopy(selectedObjectView);
+    }
+
+    void Window::onHotKeyPaste()
+    {
+        if(!copyObjectView)
+        {
+            return;
+        }
+
+        float posx = copyObjectView->getPosx() + 10.f;
+        float posy = copyObjectView->getPosy() + 10.f;
+
+        paste(QPoint(posx, posy));
     }
 }
