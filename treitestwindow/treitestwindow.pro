@@ -53,3 +53,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += resources/figure.xml \
             resources/figure_copy.xml \
             resources/figure_copy_copy.xml
+
+INCLUDEPATH += $$PWD/libs/include
+LIBS += -L$$PWD/libs -lQtSolutions_PropertyBrowser-head
+
+win32:CONFIG(release, debug|release): DESTDIR = $$PWD/release
+win32:CONFIG(debug, debug|release): DESTDIR = $$PWD/debug
+
+win32 {
+    CONFIG += copy_dll
+    copy_dll.commands = $$QMAKE_COPY $$PWD/libs/QtSolutions_PropertyBrowser-head.dll $$DESTDIR/
+    QMAKE_EXTRA_COMPILERS += copy_dll
+}

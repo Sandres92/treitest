@@ -1,27 +1,69 @@
 #include "window.h"
 
+#include <qttreepropertybrowser.h>
+#include <qtvariantproperty.h>
+
 namespace trei
 {
     Window::Window(QWidget *parent)
-        : QWidget(parent)
+        : QMainWindow(parent)
     {
+        initWindow();
         initHotKey();
     }
 
     Window::Window(const QString &name, const QColor &color, int type, int windowWidth, int windowHeight,
                    bool usePassword, const QString &password, const QString &groupName, const QString &subGroupName,
                    int posx, int posy, int accessLevel, QWidget *parent)
-        : QWidget(parent), name(name), color(color), type(type),  windowWidth(windowWidth), windowHeight(windowHeight),
+        : QMainWindow(parent), name(name), color(color), type(type),  windowWidth(windowWidth), windowHeight(windowHeight),
           usePassword(usePassword),  password(password), groupName(groupName), subGroupName(subGroupName),
           posx(posx), posy(posy), accessLevel(accessLevel)
     {
+        initWindow();
+
         setWindowTitle(name);
         resize(windowWidth, windowHeight);
         move(posx, posy);
 
-        setStyleSheet("background-color:" + color.name() + ";");
+        centralWidget->setStyleSheet("background-color:" + color.name() + ";");
 
         initHotKey();
+        init_qtbrowserproperty();
+    }
+
+    Window::~Window()
+    {
+        delete keyCtrlD;
+        delete keyCtrlC;
+        delete keyCtrlV;
+
+        selectedObjectView = nullptr;
+        copyObjectView = nullptr;
+
+        qDeleteAll(objectViews);
+    }
+
+    void Window::initWindow()
+    {
+        centralWidget = new QWidget();
+        setCentralWidget(centralWidget);
+
+        //QMenuBar *menu = new QMenuBar(this);
+        //QMenu *file = new QMenu();
+        //file->addMenu("&File");
+        //menu->addMenu(file);
+
+        QMenuBar* mainMenu = this->menuBar();
+
+        QMenu *menuGame = new QMenu("Файл");
+        menuGame->addAction("Сохранить");
+        menuGame->addAction("Свойства");
+
+        //QMenu *menuHelp = new QMenu("Help");
+        //menuHelp->addAction("How to Play...");
+        //menuHelp->addAction("About");
+
+        mainMenu->addMenu(menuGame);
     }
 
     void Window::initHotKey()
@@ -39,16 +81,27 @@ namespace trei
         connect(keyCtrlV, SIGNAL(activated()), this, SLOT(onHotKeyPaste()));
     }
 
-    Window::~Window()
+    void Window::init_qtbrowserproperty()
     {
-        delete keyCtrlD;
-        delete keyCtrlC;
-        delete keyCtrlV;
+        QtVariantPropertyManager *variantManager = new QtVariantPropertyManager();
+        QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory();
+        QtTreePropertyBrowser *propertyBrowser = new QtTreePropertyBrowser();
 
-        selectedObjectView = nullptr;
-        copyObjectView = nullptr;
+        propertyBrowser->setFactoryForManager(variantManager, variantFactory);
 
-        qDeleteAll(objectViews);
+        QtVariantProperty *property1 = variantManager->addProperty(QVariant::String, "Имя объекта");
+        property1->setValue("TestObject");
+
+        QtVariantProperty *property2 = variantManager->addProperty(QVariant::Double, "Размер");
+        property2->setValue(10.5);
+
+        propertyBrowser->addProperty(property1);
+        propertyBrowser->addProperty(property2);
+
+        QDockWidget *dockWidget = new QDockWidget("Свойства", this);
+        dockWidget->setWidget(propertyBrowser);
+        dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
+        addDockWidget(Qt::RightDockWidgetArea, dockWidget);
     }
 
     void Window::contextMenuEvent(QContextMenuEvent *event)
@@ -207,7 +260,7 @@ namespace trei
     void Window::addObjectView(ObjectView *objectView)
     {
         objectViews.append(objectView);
-        objectView->setParent(this);
+        objectView->setParent(centralWidget);
         objectView->show();
 
         connect(objectView, SIGNAL(onObjectViewClick(ObjectView *)), this, SLOT(onObjectViewClick(ObjectView *)));

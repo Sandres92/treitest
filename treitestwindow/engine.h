@@ -4,7 +4,6 @@
 #include <QDebug>
 #include <QWidget>
 #include <QShortcut>
-
 #include "xmlparser.h"
 
 namespace trei {

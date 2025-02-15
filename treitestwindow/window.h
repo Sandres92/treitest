@@ -6,10 +6,11 @@
 
 #include "objects/objectview.h"
 #include <QList>
+#include <qtpropertybrowser.h>
 
 namespace trei
 {
-    class Window : public QWidget
+    class Window : public QMainWindow
     {
         Q_OBJECT
 
@@ -89,6 +90,11 @@ namespace trei
         QShortcut *keyCtrlC;
         QShortcut *keyCtrlV;
         void initHotKey();
+
+        void init_qtbrowserproperty();
+        void initWindow();
+
+        QWidget *centralWidget;
     };
 }
 #endif // WINDOW_H

@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "xmlparser.h"
 
+#include <QSplitter>
+#include <QWidget>
+
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
@@ -46,5 +49,6 @@ private:
     void saveWindow();
     void saveAllWindow();
     void init();
+    void init_qtbrowserproperty();
 };
 #endif // MAINWINDOW_H
