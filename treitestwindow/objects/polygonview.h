@@ -8,12 +8,16 @@
 #include <QPointF>
 
 #include "objectview.h"
+#include <QVariantList>
 
 namespace trei
 {
     class PolygonView: public ObjectView
     {
         Q_OBJECT
+        //Q_PROPERTY(QString coords READ getCoordsString)
+        //Q_PROPERTY(QVector<QPointF> coords READ getCoords)
+        Q_PROPERTY(QVariantList coords READ getCoordsVL)
 
     public:
         explicit PolygonView() = default;
@@ -24,6 +28,8 @@ namespace trei
         void setCoords(const QVector<QPointF> &coords);
         void addCoord(const QPointF &coord);
         QVector<QPointF> getCoords() const;
+        QString getCoordsString() const;
+        QVariantList getCoordsVL() const;
         PolygonView *clone() override;
 
     protected:

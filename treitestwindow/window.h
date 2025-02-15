@@ -6,7 +6,9 @@
 
 #include "objects/objectview.h"
 #include <QList>
-#include <qtpropertybrowser.h>
+
+#include <qttreepropertybrowser.h>
+#include <qtvariantproperty.h>
 
 namespace trei
 {
@@ -65,6 +67,8 @@ namespace trei
         void onHotKeyDuplicate();
         void onHotKeyCopy();
         void onHotKeyPaste();
+        void onSaveAction();
+        void onPropertyAction();
 
     private:
         QString name;
@@ -95,6 +99,9 @@ namespace trei
         void initWindow();
 
         QWidget *centralWidget;
+        QDockWidget *dockWidget;
+        QtTreePropertyBrowser *propertyBrowser;
+        void loadPropertiesToBrowser(QtTreePropertyBrowser *browser, ObjectView *object);
     };
 }
 #endif // WINDOW_H

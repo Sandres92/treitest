@@ -1,7 +1,6 @@
 #include "window.h"
 
-#include <qttreepropertybrowser.h>
-#include <qtvariantproperty.h>
+#include <Window.h>
 
 namespace trei
 {
@@ -40,6 +39,9 @@ namespace trei
         selectedObjectView = nullptr;
         copyObjectView = nullptr;
 
+        delete centralWidget;
+        delete dockWidget;
+
         qDeleteAll(objectViews);
     }
 
@@ -56,12 +58,13 @@ namespace trei
         QMenuBar* mainMenu = this->menuBar();
 
         QMenu *menuGame = new QMenu("Файл");
-        menuGame->addAction("Сохранить");
-        menuGame->addAction("Свойства");
+        QAction* saveAction = new QAction("Сохранить");
+        connect(saveAction, SIGNAL(triggered()), this, SLOT(onSaveAction()));
+        menuGame->addAction(saveAction);
 
-        //QMenu *menuHelp = new QMenu("Help");
-        //menuHelp->addAction("How to Play...");
-        //menuHelp->addAction("About");
+        QAction* propertyAction = new QAction("Свойства");
+        connect(propertyAction, SIGNAL(triggered()), this, SLOT(onPropertyAction()));
+        menuGame->addAction(propertyAction);
 
         mainMenu->addMenu(menuGame);
     }
@@ -85,7 +88,7 @@ namespace trei
     {
         QtVariantPropertyManager *variantManager = new QtVariantPropertyManager();
         QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory();
-        QtTreePropertyBrowser *propertyBrowser = new QtTreePropertyBrowser();
+        propertyBrowser = new QtTreePropertyBrowser();
 
         propertyBrowser->setFactoryForManager(variantManager, variantFactory);
 
@@ -98,7 +101,7 @@ namespace trei
         propertyBrowser->addProperty(property1);
         propertyBrowser->addProperty(property2);
 
-        QDockWidget *dockWidget = new QDockWidget("Свойства", this);
+        dockWidget = new QDockWidget("Свойства", this);
         dockWidget->setWidget(propertyBrowser);
         dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
         addDockWidget(Qt::RightDockWidgetArea, dockWidget);
@@ -280,6 +283,9 @@ namespace trei
             return;
         }
         unselectObjectView(objectView);
+
+
+        loadPropertiesToBrowser(propertyBrowser, objectView);
     }
 
     void Window::unselectObjectView(ObjectView * objectView)
@@ -363,4 +369,84 @@ namespace trei
 
         paste(QPoint(posx, posy));
     }
+
+    void Window::onSaveAction()
+    {
+        qDebug() << "save";
+    }
+
+    void Window::onPropertyAction()
+    {
+        qDebug() << "property";
+
+        if(dockWidget->isHidden())
+        {
+            dockWidget->show();
+        }
+        else
+        {
+            dockWidget->hide();
+        }
+    }
+
+    void Window::loadPropertiesToBrowser(QtTreePropertyBrowser *browser, ObjectView *object) {
+        browser->clear();
+
+        QtVariantPropertyManager *manager = new QtVariantPropertyManager(browser);
+        QtVariantEditorFactory *factory = new QtVariantEditorFactory();
+        browser->setFactoryForManager(manager, factory);
+
+        const QMetaObject *metaObj = object->metaObject();
+        const QMetaObject *objectViewMeta = &ObjectView::staticMetaObject;
+        int firstPropertyIndex = objectViewMeta->propertyOffset();
+
+        //for (int i = firstPropertyIndex; i < metaObj->propertyCount(); ++i) {
+
+        //    QMetaProperty property = metaObj->property(i);
+        //    if (!property.isReadable())
+        //    {
+        //        continue;
+        //    }
+
+        //    QVariant value = property.read(object);
+        //    QtVariantProperty *prop = manager->addProperty(value.type(), property.name());
+
+        //    prop->setValue(value);
+        //    browser->addProperty(prop);
+        //}
+
+        for (int i = firstPropertyIndex; i < metaObj->propertyCount(); ++i) {
+
+            QMetaProperty property = metaObj->property(i);
+            if (!property.isReadable())
+            {
+                continue;
+            }
+
+            QVariant value = property.read(object);
+
+            if (property.userType() == qMetaTypeId<QVariantList>())
+            {
+                QtVariantProperty *arrayProp = manager->addProperty(QtVariantPropertyManager::groupTypeId(), property.name());
+
+                QVariantList array = value.toList();
+                for (int j = 0; j < array.size(); ++j)
+                {
+                    QString pointName = QString("%1").arg(j);
+                    QtVariantProperty *pointProp = manager->addProperty(QVariant::String, pointName);
+                    pointProp->setValue(QString("(%1, %2)").arg(array[j].toPointF().x()).arg(array[j].toPointF().y()));
+                    arrayProp->addSubProperty(pointProp);
+                }
+
+                browser->addProperty(arrayProp);
+            }
+            else
+            {
+                QtVariantProperty *prop = manager->addProperty(value.type(), property.name());
+                prop->setValue(value);
+                browser->addProperty(prop);
+            }
+        }
+    }
 }
+

@@ -35,6 +35,25 @@ namespace trei
         return coords;
     }
 
+    QString PolygonView::getCoordsString() const
+    {
+        QStringList points;
+        for (int i = 0; i < coords.size(); i++)
+        {
+            points.append(QString("(%1, %2)").arg(coords[i].x()).arg(coords[i].y()));
+        }
+        return points.join("; ");
+    }
+
+    QVariantList PolygonView::getCoordsVL() const {
+        QVariantList list;
+        for (int i = 0; i < coords.size(); i++)
+        {
+            list.append(QVariant::fromValue(coords[i]));
+        }
+        return list;
+    }
+
     void PolygonView::addCoord(const QPointF &coord)
     {
         coords.append(coord);

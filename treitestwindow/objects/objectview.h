@@ -13,6 +13,18 @@ namespace trei
     {
         Q_OBJECT
 
+        Q_PROPERTY(QString name READ getName)
+        Q_PROPERTY(double posx READ getPosx)
+        Q_PROPERTY(double posy READ getPosy)
+        Q_PROPERTY(double width READ getWidth)
+        Q_PROPERTY(double height READ getHeight)
+        Q_PROPERTY(int angle READ getAngle)
+        Q_PROPERTY(bool lock READ getLock)
+        Q_PROPERTY(QColor lineColor READ getLineColor)
+        Q_PROPERTY(int lineWidth READ getLineWidth)
+        Q_PROPERTY(bool fill READ getFill)
+        Q_PROPERTY(QColor fillColor READ getFillColor)
+
     public:
         explicit ObjectView();
         explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
@@ -82,16 +94,16 @@ namespace trei
 
         void cloneCommonField(ObjectView &clonedObjectView);
 
-        QString name;
-        float posx;
-        float posy;
-        float width;
-        float height;
-        int angle;
-        bool lock;
-        QColor lineColor;
-        int lineWidth;
-        bool fill;
+        QString name = "";
+        float posx = 0.f;
+        float posy = 0.f;
+        float width = 0.f;
+        float height = 0.f;
+        int angle = 0.f;
+        bool lock = false;
+        QColor lineColor ;
+        int lineWidth = 0;
+        bool fill = 0;
         QColor fillColor;
 
         QPoint mousePoint;
