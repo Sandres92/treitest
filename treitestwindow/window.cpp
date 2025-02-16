@@ -56,7 +56,7 @@ namespace trei
         QMenuBar* mainMenu = this->menuBar();
         QMenu *fileMenu = new QMenu("Файл");
 
-        fileMenu->addMenu(createCreationMenu());
+        fileMenu->addMenu(createCreationMenu(QPoint(0.f, 0.f)));
 
         QAction* saveAction = new QAction("Сохранить");
         connect(saveAction, SIGNAL(triggered()), this, SLOT(onSaveAction()));
@@ -65,15 +65,36 @@ namespace trei
         mainMenu->addMenu(fileMenu);
     }
 
-    QMenu *Window::createCreationMenu()
+    QMenu *Window::createCreationMenu(const QPoint &pos)
     {
         QMenu *creationMenu = new QMenu("Создать");
         QAction* createEllipsAction = new QAction("Элипс");
         creationMenu->addAction(createEllipsAction);
+        createEllipsAction->setData(pos);
+        connect(createEllipsAction, &QAction::triggered, this, [this, createEllipsAction]()
+        {
+            const QPoint pos = createEllipsAction->data().toPoint();
+            createObjectView(pos);
+        });
+
         QAction* createRectangleAction = new QAction("Квадрат");
         creationMenu->addAction(createRectangleAction);
+        createRectangleAction->setData(pos);
+        connect(createRectangleAction, &QAction::triggered, this, [this, createRectangleAction]()
+        {
+            const QPoint pos = createRectangleAction->data().toPoint();
+            createObjectView(pos);
+        });
+
         QAction* createPoligoneAction = new QAction("Полигон");
         creationMenu->addAction(createPoligoneAction);
+        createPoligoneAction->setData(pos);
+        connect(createPoligoneAction, &QAction::triggered, this, [this, createPoligoneAction]()
+        {
+            const QPoint pos = createPoligoneAction->data().toPoint();
+            createObjectView(pos);
+        });
+
         return creationMenu;
     }
 
@@ -113,14 +134,18 @@ namespace trei
 
     void Window::contextMenuEvent(QContextMenuEvent *event)
     {
-        QMenu menu(this);        
-        menu.addMenu(createCreationMenu());
+        qDebug() << "contextMenuEvent";
 
-        QAction *pasteAction = menu.addAction("Вставить");
+        QMenu menu(this);
+        menu.addMenu(createCreationMenu(QPoint(event->pos())));
+
+        QAction *pasteAction = new QAction("Вставить");
         pasteAction->setData(event->pos());
+        menu.addAction(pasteAction);
 
-        connect(pasteAction, &QAction::triggered, this, [this, pasteAction]() {
-            QPoint pos = pasteAction->data().toPoint();
+        connect(pasteAction, &QAction::triggered, this, [this, pasteAction]()
+        {
+            const QPoint pos = pasteAction->data().toPoint();
             paste(pos);
         });
 
@@ -365,7 +390,7 @@ namespace trei
 
     void Window::createObjectView(const QPoint &pos)
     {
-
+        qDebug() << "11 22 33 " << pos;
     }
 
     void Window::paste(const QPoint &pos)

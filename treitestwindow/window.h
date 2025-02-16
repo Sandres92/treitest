@@ -119,7 +119,7 @@ namespace trei
         QtTreePropertyBrowser *propertyBrowser;
         QtVariantPropertyManager *variantManager;
         QMetaObject::Connection variantManagerConnection;
-        QMenu *createCreationMenu();
+        QMenu *createCreationMenu(const QPoint &pos);
     };
 }
 #endif // WINDOW_H
