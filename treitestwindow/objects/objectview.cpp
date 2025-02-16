@@ -18,9 +18,6 @@ namespace trei
         : name(name), posx(posx), posy(posy), width(width), height(height), angle(angle), lock(lock),
           lineColor(lineColor), lineWidth(lineWidth), fill(fill), fillColor(fillColor)
     {
-        resize(width + lineWidth, height + lineWidth);
-        move(posx, posy);
-
         init();
     }
 
@@ -28,16 +25,15 @@ namespace trei
         : name(other.name), posx(other.posx), posy(other.posy), width(other.width), height(other.height), angle(other.angle), lock(other.lock),
         lineColor(other.lineColor), lineWidth(other.lineWidth), fill(other.fill), fillColor(other.fillColor)
     {
-        resize(width + lineWidth, height + lineWidth);
-        move(posx, posy);
-
         init();
     }
 
     void ObjectView::init()
     {
         rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-        rubberBand->setGeometry(QRect(-1.f, -1.f, width + 1.f, height + 1.f));
+
+        move(posx, posy);
+        resizeObjectView();
     }
 
     void ObjectView::setName(const QString &name)
@@ -53,6 +49,7 @@ namespace trei
     {
         this->posx = posx;
         move(posx, this->posy);
+        emit onPosyChanged(posx);
     }
     float ObjectView::getPosx() const
     {
@@ -62,7 +59,8 @@ namespace trei
     void ObjectView::setPosy(float posy)
     {
         this->posy = posy;
-        move(this->posx, posy);
+        move(this->posx, posy);        
+        emit onPosxChanged(posy);
     }
     void ObjectView::setPos(float posx, float posy)
     {
@@ -78,6 +76,7 @@ namespace trei
     void ObjectView::setWidth(float width)
     {
         this->width = width;
+        resizeObjectView();
     }
     float ObjectView::getWidth() const
     {
@@ -87,6 +86,7 @@ namespace trei
     void ObjectView::setHeight(float height)
     {
         this->height = height;
+        resizeObjectView();
     }
     float ObjectView::getHeight() const
     {
@@ -97,7 +97,13 @@ namespace trei
     {
         this->width = width;
         this->height = height;
-        resize(width, height);
+        resizeObjectView();
+    }
+
+    void ObjectView::resizeObjectView()
+    {        
+        rubberBand->setGeometry(QRect(-lineWidth/2.f, -lineWidth/2.f, width + lineWidth, height + lineWidth));
+        resize(width + lineWidth, height + lineWidth);
     }
 
     void ObjectView::setAngle(int angle)
@@ -121,6 +127,7 @@ namespace trei
     void ObjectView::setLineColor(const QColor &lineColor)
     {
         this->lineColor = lineColor;
+        repaint();
     }
     QColor ObjectView::getLineColor() const
     {
@@ -130,6 +137,8 @@ namespace trei
     void ObjectView::setLineWidth(int lineWidth)
     {
         this->lineWidth = lineWidth;
+        resizeObjectView();
+        repaint();
     }
     int ObjectView::getLineWidth() const
     {
@@ -139,6 +148,7 @@ namespace trei
     void ObjectView::setFill(bool fill)
     {
         this->fill = fill;
+        repaint();
     }
     bool ObjectView::getFill() const
     {
@@ -148,6 +158,7 @@ namespace trei
     void ObjectView::setFillColor(const QColor &fillColor)
     {
         this->fillColor = fillColor;
+        repaint();
     }
     QColor ObjectView::getFillColor() const
     {
@@ -158,22 +169,26 @@ namespace trei
     {
         QMenu menu(this);
         menu.addAction("Копировать", this, &ObjectView::copy);
-        menu.addSeparator();
         menu.addAction("Дублировать", this, &ObjectView::duplicate);
+        menu.addSeparator();
+        menu.addAction("Удалить", this, &ObjectView::deleteObjectView);
 
         menu.exec(event->globalPos());
     }
 
     void ObjectView::copy()
     {
-        qDebug() << "copy";
-        emit onObjectViewCopy(this);
+        emit onCopyObjectView(this);
     }
 
     void ObjectView::duplicate()
     {
+        emit onDuplicateObjectView(this);
+    }
 
-        emit onObjectViewDuplicate(this);
+    void ObjectView::deleteObjectView()
+    {
+        emit onDeleteObjectView(this);
     }
 
     void ObjectView::mousePressEvent(QMouseEvent *event)
@@ -182,14 +197,31 @@ namespace trei
         mousePressEventHandler();
 
         rubberBand->show();
-        emit onObjectViewClick(this);
+        isDragged = false;
 
-        raise();
+        emit onClickObjectView(this);
     }
 
     void ObjectView::mouseMoveEvent(QMouseEvent *event)
     {
+        if(lock)
+        {
+            return;
+        }
         const QPointF delta = event->globalPos() - mousePoint;
+
+        if(delta.x()*delta.x() < 9 &&
+            delta.y()*delta.y() < 9)
+        {
+            return;
+        }
+
+        if(!isDragged)
+        {
+            isDragged = true;
+            emit onBeginDrag(this);
+        }
+
         move(x()+delta.x(), y()+delta.y());
 
         posx += delta.x();
@@ -200,15 +232,36 @@ namespace trei
 
     void ObjectView::mouseReleaseEvent(QMouseEvent *)
     {
-        qDebug() << "mouseReleaseEvent";
+        if(isDragged)
+        {
+            isDragged = false;
+            emit onEndDrag(this);
+        }
     }
+
+    //void ObjectView::dragEnterEvent(QDragEnterEvent *event)
+    //{
+    //    qDebug() << "dragEnterEvent";
+    //}
+    //void ObjectView::dragMoveEvent(QDragMoveEvent *event)
+    //{
+    //    qDebug() << "dragMoveEvent";
+    //}
+    //void ObjectView::dropEvent(QDropEvent *event)
+    //{
+    //    qDebug() << "dropEvent";
+    //}
+    //void ObjectView::dragLeaveEvent(QDragLeaveEvent *event)
+    //{
+    //    qDebug() << "dragLeaveEvent";
+    //}
 
     void ObjectView::select()
     {
         rubberBand->show();
     }
 
-    void ObjectView::unselect()
+    void ObjectView::unselect() const
     {
         rubberBand->hide();
     }

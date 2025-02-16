@@ -15,6 +15,7 @@ namespace trei
 
     public:
         explicit EllipseView();
+        explicit EllipseView(const QString &name, float posx, float posy);
         explicit EllipseView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
 

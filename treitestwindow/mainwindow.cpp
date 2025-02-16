@@ -9,9 +9,6 @@
 #include <QToolBar>
 #include <QDockWidget>
 
-#include <qttreepropertybrowser.h>
-#include <qtvariantproperty.h>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -20,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     initHotKey();
     init();
-
-    init_qtbrowserproperty();
 }
 
 MainWindow::~MainWindow()
@@ -38,29 +33,6 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     loadXML();
-}
-
-void MainWindow::init_qtbrowserproperty()
-{
-    QtVariantPropertyManager *variantManager = new QtVariantPropertyManager();
-    QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory();
-    QtTreePropertyBrowser *propertyBrowser = new QtTreePropertyBrowser();
-
-    propertyBrowser->setFactoryForManager(variantManager, variantFactory);
-
-    QtVariantProperty *property1 = variantManager->addProperty(QVariant::String, "Имя объекта");
-    property1->setValue("TestObject");
-
-    QtVariantProperty *property2 = variantManager->addProperty(QVariant::Double, "Размер");
-    property2->setValue(10.5);
-
-    propertyBrowser->addProperty(property1);
-    propertyBrowser->addProperty(property2);
-
-    QDockWidget *dockWidget = new QDockWidget("Свойства", this);
-    dockWidget->setWidget(propertyBrowser);
-    dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
-    addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
 
 void MainWindow::initHotKey()

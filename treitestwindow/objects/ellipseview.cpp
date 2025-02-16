@@ -6,6 +6,10 @@
 namespace trei
 {
     EllipseView::EllipseView() {}
+
+    EllipseView::EllipseView(const QString &name, float posx, float posy) : ObjectView(name, posx, posy, 71.f, 53.f, 0, false, QColor(0,0,0, 255), 2, true, QColor(204,51,51, 255))
+    { }
+
     EllipseView::EllipseView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
         : ObjectView(name, posx, posy, width, height, angle, lock, lineColor, linewidth, fill, fillColor)

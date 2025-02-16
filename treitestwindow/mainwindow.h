@@ -49,6 +49,5 @@ private:
     void saveWindow();
     void saveAllWindow();
     void init();
-    void init_qtbrowserproperty();
 };
 #endif // MAINWINDOW_H

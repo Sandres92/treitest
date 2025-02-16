@@ -24,21 +24,21 @@ namespace trei
         T *createCommonObjectView(const QXmlStreamReader &xml) {
             static_assert(std::is_base_of<ObjectView, T>::value, "T must be a descendant of ObjectView");
 
-            QString name = xml.attributes().value("name").toString();
-            float posx = xml.attributes().value("posx").toFloat();
-            float posy = xml.attributes().value("posy").toFloat();
+            const QString name = xml.attributes().value("name").toString();
+            const float posx = xml.attributes().value("posx").toFloat();
+            const float posy = xml.attributes().value("posy").toFloat();
 
-            float width = xml.attributes().value("width").toFloat();
-            float height = xml.attributes().value("height").toFloat();
+            const float width = xml.attributes().value("width").toFloat();
+            const float height = xml.attributes().value("height").toFloat();
 
-            int angle = xml.attributes().value("angle").toInt();
-            bool lock = Convector::stringToBool(xml.attributes().value("lock").toString());
+            const int angle = xml.attributes().value("angle").toInt();
+            const bool lock = Convector::stringToBool(xml.attributes().value("lock").toString());
 
-            QColor lineColor = Convector::stringHexToColor(xml.attributes().value("color").toString());
-            int lineWidth = xml.attributes().value("linewidth").toInt();
-            bool fill = Convector::stringToBool(xml.attributes().value("fill").toString());
+            const QColor lineColor = Convector::stringHexToColor(xml.attributes().value("color").toString());
+            const int lineWidth = xml.attributes().value("linewidth").toInt();
+            const bool fill = Convector::stringToBool(xml.attributes().value("fill").toString());
 
-            QColor fillColor = Convector::stringHexToColor(xml.attributes().value("fillcolor").toString());
+            const QColor fillColor = Convector::stringHexToColor(xml.attributes().value("fillcolor").toString());
 
             return new T(name, posx, posy, width, height, angle,
                          lock, lineColor, lineWidth, fill, fillColor);

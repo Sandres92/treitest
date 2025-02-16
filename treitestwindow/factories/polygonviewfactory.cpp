@@ -26,8 +26,8 @@ namespace trei
 
             if (xml.tokenType() == QXmlStreamReader::StartElement && xml.name() == "coordinate")
             {
-                float coordx = xml.attributes().value("coordx").toFloat();
-                float coordy = xml.attributes().value("coordy").toFloat();
+                const float coordx = xml.attributes().value("coordx").toFloat();
+                const float coordy = xml.attributes().value("coordy").toFloat();
                 coords.append(QPointF(coordx, coordy));
             }
         }

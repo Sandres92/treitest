@@ -8,7 +8,6 @@ namespace trei
         : QMainWindow(parent)
     {
         initWindow();
-        initHotKey();
     }
 
     Window::Window(const QString &name, const QColor &color, int type, int windowWidth, int windowHeight,
@@ -25,9 +24,6 @@ namespace trei
         move(posx, posy);
 
         centralWidget->setStyleSheet("background-color:" + color.name() + ";");
-
-        initHotKey();
-        init_qtbrowserproperty();
     }
 
     Window::~Window()
@@ -46,27 +42,39 @@ namespace trei
     }
 
     void Window::initWindow()
-    {
+    {        
         centralWidget = new QWidget();
         setCentralWidget(centralWidget);
 
-        //QMenuBar *menu = new QMenuBar(this);
-        //QMenu *file = new QMenu();
-        //file->addMenu("&File");
-        //menu->addMenu(file);
+        initHotKey();
+        initQtPropertyBrowser();
+        initMenuBar();
+    }
 
+    void Window::initMenuBar()
+    {
         QMenuBar* mainMenu = this->menuBar();
+        QMenu *fileMenu = new QMenu("Файл");
 
-        QMenu *menuGame = new QMenu("Файл");
+        fileMenu->addMenu(createCreationMenu());
+
         QAction* saveAction = new QAction("Сохранить");
         connect(saveAction, SIGNAL(triggered()), this, SLOT(onSaveAction()));
-        menuGame->addAction(saveAction);
+        fileMenu->addAction(saveAction);
 
-        QAction* propertyAction = new QAction("Свойства");
-        connect(propertyAction, SIGNAL(triggered()), this, SLOT(onPropertyAction()));
-        menuGame->addAction(propertyAction);
+        mainMenu->addMenu(fileMenu);
+    }
 
-        mainMenu->addMenu(menuGame);
+    QMenu *Window::createCreationMenu()
+    {
+        QMenu *creationMenu = new QMenu("Создать");
+        QAction* createEllipsAction = new QAction("Элипс");
+        creationMenu->addAction(createEllipsAction);
+        QAction* createRectangleAction = new QAction("Квадрат");
+        creationMenu->addAction(createRectangleAction);
+        QAction* createPoligoneAction = new QAction("Полигон");
+        creationMenu->addAction(createPoligoneAction);
+        return creationMenu;
     }
 
     void Window::initHotKey()
@@ -82,39 +90,34 @@ namespace trei
         keyCtrlV = new QShortcut(this);
         keyCtrlV->setKey(Qt::CTRL + Qt::Key_V);
         connect(keyCtrlV, SIGNAL(activated()), this, SLOT(onHotKeyPaste()));
+
+        keyCtrlDel = new QShortcut(this);
+        keyCtrlDel->setKey(Qt::Key_Delete);
+        connect(keyCtrlDel, SIGNAL(activated()), this, SLOT(onHotKeyDelete()));
     }
 
-    void Window::init_qtbrowserproperty()
+    void Window::initQtPropertyBrowser()
     {
-        QtVariantPropertyManager *variantManager = new QtVariantPropertyManager();
+        variantManager = new QtVariantPropertyManager();
         QtVariantEditorFactory *variantFactory = new QtVariantEditorFactory();
         propertyBrowser = new QtTreePropertyBrowser();
 
         propertyBrowser->setFactoryForManager(variantManager, variantFactory);
 
-        QtVariantProperty *property1 = variantManager->addProperty(QVariant::String, "Имя объекта");
-        property1->setValue("TestObject");
-
-        QtVariantProperty *property2 = variantManager->addProperty(QVariant::Double, "Размер");
-        property2->setValue(10.5);
-
-        propertyBrowser->addProperty(property1);
-        propertyBrowser->addProperty(property2);
-
         dockWidget = new QDockWidget("Свойства", this);
         dockWidget->setWidget(propertyBrowser);
         dockWidget->setAllowedAreas(Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea);
         addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+        dockWidget->hide();
     }
 
     void Window::contextMenuEvent(QContextMenuEvent *event)
     {
-        QMenu menu(this);
+        QMenu menu(this);        
+        menu.addMenu(createCreationMenu());
 
         QAction *pasteAction = menu.addAction("Вставить");
         pasteAction->setData(event->pos());
-
-        //menu.addAction("Вставить", this, &Window::paste);
 
         connect(pasteAction, &QAction::triggered, this, [this, pasteAction]() {
             QPoint pos = pasteAction->data().toPoint();
@@ -130,14 +133,7 @@ namespace trei
             obj->unselect();
         }
         selectedObjectView = nullptr;
-
-        //for (ObjectView *obj : objectViews) {
-        //    if (obj->geometry().contains(event->pos())) {
-        //        //selectedObject = obj;
-        //        qDebug() << "Объект выбран:" << obj;
-        //        break;
-        //    }
-        //}
+        hidePropertyBrowser();
     }
 
     void Window::setName(const QString &name)
@@ -266,9 +262,12 @@ namespace trei
         objectView->setParent(centralWidget);
         objectView->show();
 
-        connect(objectView, SIGNAL(onObjectViewClick(ObjectView *)), this, SLOT(onObjectViewClick(ObjectView *)));
-        connect(objectView, SIGNAL(onObjectViewCopy(ObjectView *)), this, SLOT(onObjectViewCopy(ObjectView *)));
-        connect(objectView, SIGNAL(onObjectViewDuplicate(ObjectView *)), this, SLOT(onObjectViewDuplicate(ObjectView *)));
+        connect(objectView, SIGNAL(onClickObjectView(ObjectView *)), this, SLOT(onClickObjectView(ObjectView *)));
+        connect(objectView, SIGNAL(onCopyObjectView(ObjectView *)), this, SLOT(onCopyObjectView(ObjectView *)));
+        connect(objectView, SIGNAL(onDuplicateObjectView(ObjectView *)), this, SLOT(onDuplicateObjectView(ObjectView *)));
+        connect(objectView, SIGNAL(onDeleteObjectView(ObjectView *)), this, SLOT(onDeleteObjectView(ObjectView *)));
+
+        connect(objectView, SIGNAL(onEndDrag(ObjectView *)), this, SLOT(onEndDragObjectView(ObjectView *)));
     }
 
     const QList<ObjectView *> Window::getObjectViews() const
@@ -276,34 +275,39 @@ namespace trei
         return objectViews;
     }
 
-    void Window::onObjectViewClick(ObjectView * objectView)
+    void Window::onClickObjectView(ObjectView * objectView)
     {
         if(objectView == selectedObjectView)
         {
             return;
         }
-        unselectObjectView(objectView);
 
-
-        loadPropertiesToBrowser(propertyBrowser, objectView);
+        unselectObjectView();
+        selectObjectView(objectView);
     }
 
-    void Window::unselectObjectView(ObjectView * objectView)
+    void Window::selectObjectView(ObjectView * objectView)
+    {
+        selectedObjectView = objectView;
+        showPropertyBrowser(objectView);
+    }
+
+    void Window::unselectObjectView()
     {
         if(selectedObjectView)
         {
             selectedObjectView->unselect();
         }
 
-        selectedObjectView = objectView;
+        selectedObjectView = nullptr;
     }
 
-    void Window::onObjectViewCopy(ObjectView * objectView)
+    void Window::onCopyObjectView(ObjectView * objectView)
     {
         copyObjectView = objectView;
     }
 
-    void Window::onObjectViewDuplicate(ObjectView * objectView)
+    void Window::onDuplicateObjectView(ObjectView * objectView)
     {
         ObjectView* newObjectView  = objectView->clone();
         float posx = newObjectView->getPosx() + 10.f;
@@ -314,7 +318,54 @@ namespace trei
 
         addObjectView(newObjectView);
 
-        unselectObjectView(newObjectView);
+        unselectObjectView();
+    }
+
+    void Window::onDeleteObjectView(ObjectView * objectView)
+    {
+        unselectObjectView();
+
+        objectViews.removeOne(objectView);
+        objectView->deleteLater();
+
+        hidePropertyBrowser();
+    }
+
+    void Window::onEndDragObjectView(ObjectView * objectView)
+    {
+        QSet<QtProperty *> properties = variantManager->properties();
+        QList<QtProperty *> posProperties;
+
+
+        auto itPosx = std::find_if(properties.begin(), properties.end(),
+                               [](const QtProperty* prop) {
+                                   return prop->propertyName() == "posx";
+                               });
+
+        if (itPosx != properties.end())
+        {
+            QtProperty* foundProp = *itPosx;
+            QVariant value(objectView->getPosx());
+
+            variantManager->setValue(foundProp, value);
+        }
+
+        auto itPosy = std::find_if(properties.begin(), properties.end(),
+                               [](const QtProperty* prop) {
+                                   return prop->propertyName() == "posy";
+                               });
+        if (itPosy != properties.end())
+        {
+            QtProperty* foundProp = *itPosy;
+            QVariant value(objectView->getPosy());
+
+            variantManager->setValue(foundProp, value);
+        }
+    }
+
+    void Window::createObjectView(const QPoint &pos)
+    {
+
     }
 
     void Window::paste(const QPoint &pos)
@@ -333,7 +384,8 @@ namespace trei
 
         addObjectView(newObjectView);
 
-        unselectObjectView(newObjectView);
+        unselectObjectView();
+        selectObjectView(newObjectView);
 
         copyObjectView = selectedObjectView;
     }
@@ -345,7 +397,7 @@ namespace trei
             return;
         }
 
-        onObjectViewDuplicate(selectedObjectView);
+        onDuplicateObjectView(selectedObjectView);
     }
 
     void Window::onHotKeyCopy()
@@ -354,7 +406,7 @@ namespace trei
         {
             return;
         }
-        onObjectViewCopy(selectedObjectView);
+        onCopyObjectView(selectedObjectView);
     }
 
     void Window::onHotKeyPaste()
@@ -370,6 +422,16 @@ namespace trei
         paste(QPoint(posx, posy));
     }
 
+    void Window::onHotKeyDelete()
+    {
+        if(!selectedObjectView)
+        {
+            return;
+        }
+
+        onDeleteObjectView(selectedObjectView);
+    }
+
     void Window::onSaveAction()
     {
         qDebug() << "save";
@@ -377,74 +439,97 @@ namespace trei
 
     void Window::onPropertyAction()
     {
-        qDebug() << "property";
 
+    }
+
+    void Window::showPropertyBrowser(const ObjectView *objectView)
+    {
         if(dockWidget->isHidden())
         {
             dockWidget->show();
         }
-        else
-        {
-            dockWidget->hide();
-        }
+        loadPropertyBrowser(objectView);
     }
 
-    void Window::loadPropertiesToBrowser(QtTreePropertyBrowser *browser, ObjectView *object) {
-        browser->clear();
+    void Window::hidePropertyBrowser()
+    {
+        dockWidget->hide();
+        variantManager->clear();
+        propertyBrowser->clear();
+        disconnect(variantManagerConnection);
+    }
 
-        QtVariantPropertyManager *manager = new QtVariantPropertyManager(browser);
-        QtVariantEditorFactory *factory = new QtVariantEditorFactory();
-        browser->setFactoryForManager(manager, factory);
+    void Window::loadPropertyBrowser(const ObjectView *objectView)
+    {
+        disconnect(variantManagerConnection);
 
-        const QMetaObject *metaObj = object->metaObject();
+        variantManager->clear();
+        propertyBrowser->clear();
+
+        const QMetaObject *metaObject = objectView->metaObject();
         const QMetaObject *objectViewMeta = &ObjectView::staticMetaObject;
         int firstPropertyIndex = objectViewMeta->propertyOffset();
 
-        //for (int i = firstPropertyIndex; i < metaObj->propertyCount(); ++i) {
+        for (int i = firstPropertyIndex; i < metaObject->propertyCount(); ++i) {
 
-        //    QMetaProperty property = metaObj->property(i);
-        //    if (!property.isReadable())
-        //    {
-        //        continue;
-        //    }
-
-        //    QVariant value = property.read(object);
-        //    QtVariantProperty *prop = manager->addProperty(value.type(), property.name());
-
-        //    prop->setValue(value);
-        //    browser->addProperty(prop);
-        //}
-
-        for (int i = firstPropertyIndex; i < metaObj->propertyCount(); ++i) {
-
-            QMetaProperty property = metaObj->property(i);
+            QMetaProperty property = metaObject->property(i);
             if (!property.isReadable())
             {
                 continue;
             }
 
-            QVariant value = property.read(object);
+            QVariant value = property.read(objectView);
 
             if (property.userType() == qMetaTypeId<QVariantList>())
             {
-                QtVariantProperty *arrayProp = manager->addProperty(QtVariantPropertyManager::groupTypeId(), property.name());
+                QtVariantProperty *arrayProp = variantManager->addProperty(QtVariantPropertyManager::groupTypeId(), property.name());
 
                 QVariantList array = value.toList();
                 for (int j = 0; j < array.size(); ++j)
                 {
                     QString pointName = QString("%1").arg(j);
-                    QtVariantProperty *pointProp = manager->addProperty(QVariant::String, pointName);
-                    pointProp->setValue(QString("(%1, %2)").arg(array[j].toPointF().x()).arg(array[j].toPointF().y()));
-                    arrayProp->addSubProperty(pointProp);
+                    QVariant q = array[j];
+                    QtVariantProperty *arrayElementProperty = variantManager->addProperty(q.type(), pointName);
+                    arrayElementProperty->setValue(q);
+                    arrayProp->addSubProperty(arrayElementProperty);
                 }
 
-                browser->addProperty(arrayProp);
+                propertyBrowser->addProperty(arrayProp);
             }
             else
             {
-                QtVariantProperty *prop = manager->addProperty(value.type(), property.name());
+                QtVariantProperty *prop = variantManager->addProperty(value.type(), property.name());
                 prop->setValue(value);
-                browser->addProperty(prop);
+                propertyBrowser->addProperty(prop);
+            }
+        }
+
+        variantManagerConnection =
+            connect(variantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)),
+                this, SLOT(propertyBrowserValueChanged(QtProperty *, const QVariant &)));
+    }
+
+    void Window::propertyBrowserValueChanged(QtProperty *property, const QVariant &value)
+    {
+        if(!selectedObjectView)
+        {
+            return;
+        }
+
+        const QMetaObject *metaObject = selectedObjectView->metaObject();
+
+        int propertyIndex = metaObject->indexOfProperty(property->propertyName().toStdString().c_str());
+
+        if(propertyIndex != -1)
+        {
+            QMetaProperty metaProperty = metaObject->property(propertyIndex);
+            if (metaProperty.userType() == qMetaTypeId<QVariantList>())
+            {
+
+            }
+            else
+            {
+                metaProperty.write(selectedObjectView, value);
             }
         }
     }

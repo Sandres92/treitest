@@ -21,13 +21,6 @@ namespace trei
 
         QRect rect (lineWidth/2.f, lineWidth/2.f, width-lineWidth/2.f, height-lineWidth/2.f);
 
-        //QPolygonF rect;
-        //rect << QPointF(0.f, 0.f)
-        //         << QPointF(width, 0.f)
-        //         << QPointF(width, height)
-        //         << QPointF(0.f, height)
-        //         << QPointF(0.f//
-
         painter.drawRect(rect);
     }
 

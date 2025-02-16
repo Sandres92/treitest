@@ -59,18 +59,37 @@ namespace trei
         void mousePressEvent(QMouseEvent *event) override;
 
     private slots:
+        void createObjectView(const QPoint &pos);
         void paste(const QPoint &pos);
-        void onObjectViewClick(ObjectView * objectView);
-        void onObjectViewCopy(ObjectView * objectView);
-        void onObjectViewDuplicate(ObjectView * objectView);
+        void onClickObjectView(ObjectView * objectView);
+        void onCopyObjectView(ObjectView * objectView);
+        void onDuplicateObjectView(ObjectView * objectView);
+        void onDeleteObjectView(ObjectView * objectView);
+
+        void onEndDragObjectView(ObjectView * objectView);
 
         void onHotKeyDuplicate();
         void onHotKeyCopy();
         void onHotKeyPaste();
+        void onHotKeyDelete();
         void onSaveAction();
         void onPropertyAction();
 
+        void propertyBrowserValueChanged(QtProperty *property, const QVariant &value);
+
     private:
+        void initWindow();
+        void initHotKey();
+        void initQtPropertyBrowser();
+        void initMenuBar();
+
+        void selectObjectView(ObjectView * objectView);
+        void unselectObjectView();
+
+        void showPropertyBrowser(const ObjectView *objectView);
+        void loadPropertyBrowser(const ObjectView *objectView);
+        void hidePropertyBrowser();
+
         QString name;
         QColor color;
         int type;
@@ -86,22 +105,21 @@ namespace trei
 
         QList<ObjectView *> objectViews;
         ObjectView * selectedObjectView = nullptr;
-        void unselectObjectView(ObjectView * objectView);
 
         ObjectView* copyObjectView = nullptr;
 
         QShortcut *keyCtrlD;
         QShortcut *keyCtrlC;
         QShortcut *keyCtrlV;
-        void initHotKey();
-
-        void init_qtbrowserproperty();
-        void initWindow();
+        QShortcut *keyCtrlDel;
 
         QWidget *centralWidget;
         QDockWidget *dockWidget;
+
         QtTreePropertyBrowser *propertyBrowser;
-        void loadPropertiesToBrowser(QtTreePropertyBrowser *browser, ObjectView *object);
+        QtVariantPropertyManager *variantManager;
+        QMetaObject::Connection variantManagerConnection;
+        QMenu *createCreationMenu();
     };
 }
 #endif // WINDOW_H
