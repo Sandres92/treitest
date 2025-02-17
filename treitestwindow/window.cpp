@@ -1,7 +1,5 @@
 #include "window.h"
 
-#include <Window.h>
-
 namespace trei
 {
     Window::Window(QWidget *parent)
@@ -42,7 +40,7 @@ namespace trei
     }
 
     void Window::initWindow()
-    {        
+    {
         centralWidget = new QWidget();
         setCentralWidget(centralWidget);
 
@@ -53,12 +51,12 @@ namespace trei
 
     void Window::initMenuBar()
     {
-        QMenuBar* mainMenu = this->menuBar();
+        QMenuBar *mainMenu = this->menuBar();
         QMenu *fileMenu = new QMenu("Файл");
 
-        fileMenu->addMenu(createCreationMenu(QPoint(0.f, 0.f)));
+        fileMenu->addMenu(createCreationMenu(QPoint(windowWidth / 3.f, windowHeight / 3.f)));
 
-        QAction* saveAction = new QAction("Сохранить");
+        QAction *saveAction = new QAction("Сохранить");
         connect(saveAction, SIGNAL(triggered()), this, SLOT(onSaveAction()));
         fileMenu->addAction(saveAction);
 
@@ -68,31 +66,31 @@ namespace trei
     QMenu *Window::createCreationMenu(const QPoint &pos)
     {
         QMenu *creationMenu = new QMenu("Создать");
-        QAction* createEllipsAction = new QAction("Элипс");
+        QAction *createEllipsAction = new QAction("Эллипс");
         creationMenu->addAction(createEllipsAction);
         createEllipsAction->setData(pos);
         connect(createEllipsAction, &QAction::triggered, this, [this, createEllipsAction]()
         {
             const QPoint pos = createEllipsAction->data().toPoint();
-            createObjectView(pos);
+            createObjectView("EllipseView", pos);
         });
 
-        QAction* createRectangleAction = new QAction("Квадрат");
+        QAction *createRectangleAction = new QAction("Прямоугольник");
         creationMenu->addAction(createRectangleAction);
         createRectangleAction->setData(pos);
         connect(createRectangleAction, &QAction::triggered, this, [this, createRectangleAction]()
         {
             const QPoint pos = createRectangleAction->data().toPoint();
-            createObjectView(pos);
+            createObjectView("RectangleView", pos);
         });
 
-        QAction* createPoligoneAction = new QAction("Полигон");
+        QAction *createPoligoneAction = new QAction("Полигон");
         creationMenu->addAction(createPoligoneAction);
         createPoligoneAction->setData(pos);
         connect(createPoligoneAction, &QAction::triggered, this, [this, createPoligoneAction]()
         {
             const QPoint pos = createPoligoneAction->data().toPoint();
-            createObjectView(pos);
+            createObjectView("PolygonView", pos);
         });
 
         return creationMenu;
@@ -154,9 +152,11 @@ namespace trei
 
     void Window::mousePressEvent(QMouseEvent *event)
     {
-        for (ObjectView *obj : objectViews) {
+        for (ObjectView *obj : objectViews)
+        {
             obj->unselect();
         }
+
         selectedObjectView = nullptr;
         hidePropertyBrowser();
     }
@@ -300,9 +300,9 @@ namespace trei
         return objectViews;
     }
 
-    void Window::onClickObjectView(ObjectView * objectView)
+    void Window::onClickObjectView(ObjectView *objectView)
     {
-        if(objectView == selectedObjectView)
+        if (objectView == selectedObjectView)
         {
             return;
         }
@@ -311,15 +311,17 @@ namespace trei
         selectObjectView(objectView);
     }
 
-    void Window::selectObjectView(ObjectView * objectView)
+    void Window::selectObjectView(ObjectView *objectView)
     {
         selectedObjectView = objectView;
         showPropertyBrowser(objectView);
+
+        selectedObjectView->raise();
     }
 
     void Window::unselectObjectView()
     {
-        if(selectedObjectView)
+        if (selectedObjectView)
         {
             selectedObjectView->unselect();
         }
@@ -327,14 +329,14 @@ namespace trei
         selectedObjectView = nullptr;
     }
 
-    void Window::onCopyObjectView(ObjectView * objectView)
+    void Window::onCopyObjectView(ObjectView *objectView)
     {
         copyObjectView = objectView;
     }
 
-    void Window::onDuplicateObjectView(ObjectView * objectView)
+    void Window::onDuplicateObjectView(ObjectView *objectView)
     {
-        ObjectView* newObjectView  = objectView->clone();
+        ObjectView *newObjectView  = objectView->clone();
         float posx = newObjectView->getPosx() + 10.f;
         float posy = newObjectView->getPosy() + 10.f;
 
@@ -346,7 +348,7 @@ namespace trei
         unselectObjectView();
     }
 
-    void Window::onDeleteObjectView(ObjectView * objectView)
+    void Window::onDeleteObjectView(ObjectView *objectView)
     {
         unselectObjectView();
 
@@ -356,51 +358,55 @@ namespace trei
         hidePropertyBrowser();
     }
 
-    void Window::onEndDragObjectView(ObjectView * objectView)
+    void Window::onEndDragObjectView(ObjectView *objectView)
     {
         QSet<QtProperty *> properties = variantManager->properties();
         QList<QtProperty *> posProperties;
 
 
         auto itPosx = std::find_if(properties.begin(), properties.end(),
-                               [](const QtProperty* prop) {
-                                   return prop->propertyName() == "posx";
-                               });
+                                   [](const QtProperty * prop)
+        {
+            return prop->propertyName() == "posx";
+        });
 
         if (itPosx != properties.end())
         {
-            QtProperty* foundProp = *itPosx;
+            QtProperty *foundProp = *itPosx;
             QVariant value(objectView->getPosx());
 
             variantManager->setValue(foundProp, value);
         }
 
         auto itPosy = std::find_if(properties.begin(), properties.end(),
-                               [](const QtProperty* prop) {
-                                   return prop->propertyName() == "posy";
-                               });
+                                   [](const QtProperty * prop)
+        {
+            return prop->propertyName() == "posy";
+        });
+
         if (itPosy != properties.end())
         {
-            QtProperty* foundProp = *itPosy;
+            QtProperty *foundProp = *itPosy;
             QVariant value(objectView->getPosy());
 
             variantManager->setValue(foundProp, value);
         }
     }
 
-    void Window::createObjectView(const QPoint &pos)
+    void Window::createObjectView(const QString &className, const QPoint &pos)
     {
-        qDebug() << "11 22 33 " << pos;
+        ObjectView *newObjectView = ObjectViewFactory2::instance().createObjectView(className, pos.x(), pos.y());
+        addObjectView(newObjectView);
     }
 
     void Window::paste(const QPoint &pos)
     {
-        if(!copyObjectView)
+        if (copyObjectView)
         {
             return;
         }
 
-        ObjectView* newObjectView  = copyObjectView->clone();
+        ObjectView *newObjectView  = copyObjectView->clone();
         float posx = pos.x();
         float posy = pos.y();
 
@@ -417,7 +423,7 @@ namespace trei
 
     void Window::onHotKeyDuplicate()
     {
-        if(!selectedObjectView)
+        if (!selectedObjectView)
         {
             return;
         }
@@ -427,16 +433,17 @@ namespace trei
 
     void Window::onHotKeyCopy()
     {
-        if(!selectedObjectView)
+        if (!selectedObjectView)
         {
             return;
         }
+
         onCopyObjectView(selectedObjectView);
     }
 
     void Window::onHotKeyPaste()
     {
-        if(!copyObjectView)
+        if (!copyObjectView)
         {
             return;
         }
@@ -449,7 +456,7 @@ namespace trei
 
     void Window::onHotKeyDelete()
     {
-        if(!selectedObjectView)
+        if (!selectedObjectView)
         {
             return;
         }
@@ -469,10 +476,11 @@ namespace trei
 
     void Window::showPropertyBrowser(const ObjectView *objectView)
     {
-        if(dockWidget->isHidden())
+        if (dockWidget->isHidden())
         {
             dockWidget->show();
         }
+
         loadPropertyBrowser(objectView);
     }
 
@@ -495,9 +503,11 @@ namespace trei
         const QMetaObject *objectViewMeta = &ObjectView::staticMetaObject;
         int firstPropertyIndex = objectViewMeta->propertyOffset();
 
-        for (int i = firstPropertyIndex; i < metaObject->propertyCount(); ++i) {
+        for (int i = firstPropertyIndex; i < metaObject->propertyCount(); ++i)
+        {
 
             QMetaProperty property = metaObject->property(i);
+
             if (!property.isReadable())
             {
                 continue;
@@ -510,6 +520,7 @@ namespace trei
                 QtVariantProperty *arrayProp = variantManager->addProperty(QtVariantPropertyManager::groupTypeId(), property.name());
 
                 QVariantList array = value.toList();
+
                 for (int j = 0; j < array.size(); ++j)
                 {
                     QString pointName = QString("%1").arg(j);
@@ -530,13 +541,13 @@ namespace trei
         }
 
         variantManagerConnection =
-            connect(variantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)),
-                this, SLOT(propertyBrowserValueChanged(QtProperty *, const QVariant &)));
+                        connect(variantManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)),
+                                this, SLOT(propertyBrowserValueChanged(QtProperty *, const QVariant &)));
     }
 
     void Window::propertyBrowserValueChanged(QtProperty *property, const QVariant &value)
     {
-        if(!selectedObjectView)
+        if (!selectedObjectView)
         {
             return;
         }
@@ -545,9 +556,10 @@ namespace trei
 
         int propertyIndex = metaObject->indexOfProperty(property->propertyName().toStdString().c_str());
 
-        if(propertyIndex != -1)
+        if (propertyIndex != -1)
         {
             QMetaProperty metaProperty = metaObject->property(propertyIndex);
+
             if (metaProperty.userType() == qMetaTypeId<QVariantList>())
             {
 

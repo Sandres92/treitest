@@ -9,6 +9,7 @@ namespace trei
     {
     public:
         ObjectView *createObjectView(QXmlStreamReader &xml) override;
+        ObjectView *createObjectView(float posx, float posy) override;
 
     protected:
         void addAdditionalXMLElements(const ObjectView &objectView, QXmlStreamWriter &xml) const override;

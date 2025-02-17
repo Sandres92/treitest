@@ -21,6 +21,7 @@ namespace trei
 
     public:
         explicit PolygonView() = default;
+        explicit PolygonView(const QString &name, float posx, float posy);
         explicit PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
         ~PolygonView() = default;

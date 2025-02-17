@@ -37,6 +37,12 @@ namespace trei
         return polygonView;
     }
 
+    ObjectView *PolygonViewFactory::createObjectView(float posx, float posy)
+    {
+        PolygonView *polygonView = createCommonObjectView<PolygonView>("Полигон", posx, posy);
+        return polygonView;
+    }
+
     void PolygonViewFactory::addAdditionalXMLElements(const ObjectView &objectView, QXmlStreamWriter &xml) const
     {
         const PolygonView *polygonView = dynamic_cast<const PolygonView *>(&objectView);

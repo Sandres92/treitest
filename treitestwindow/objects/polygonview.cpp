@@ -5,10 +5,16 @@
 
 namespace trei
 {
+    PolygonView::PolygonView(const QString &name, float posx, float posy) : ObjectView(name, posx, posy, 118.f, 98.f, 0, false,
+                QColor(0, 0, 0, 255), 2, true, QColor(51, 77, 179, 255))
+    {
+        setCoords(QVector<QPointF> {{0.f, 49.f}, {59.f, 0.f}, {118.f, 73.5f}, {59.f, 98.f}});
+    }
+
     PolygonView::PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
         : ObjectView(name, posx, posy, width, height, angle, lock, lineColor, linewidth, fill, fillColor)
-    { }
+    {}
 
     void PolygonView::paintEvent(QPaintEvent *)
     {
@@ -38,19 +44,24 @@ namespace trei
     QString PolygonView::getCoordsString() const
     {
         QStringList points;
+
         for (int i = 0; i < coords.size(); i++)
         {
             points.append(QString("(%1, %2)").arg(coords[i].x()).arg(coords[i].y()));
         }
+
         return points.join("; ");
     }
 
-    QVariantList PolygonView::getCoordsVL() const {
+    QVariantList PolygonView::getCoordsVL() const
+    {
         QVariantList list;
+
         for (int i = 0; i < coords.size(); i++)
         {
             list.append(QVariant::fromValue(coords[i]));
         }
+
         return list;
     }
 

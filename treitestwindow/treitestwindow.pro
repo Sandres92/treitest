@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     factories/factories.cpp \
+    factories2/objectviewfactory2.cpp \
     main.cpp \
     mainwindow.cpp \
     engine.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     factories/factories.h \
+    factories2/objectviewfactory2.h \
     mainwindow.h \
     engine.h \
     factories/ellipseviewfactory.h \

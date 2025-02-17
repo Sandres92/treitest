@@ -16,6 +16,8 @@ namespace trei
         virtual ~ObjectViewFactory() = default;
 
         virtual ObjectView *createObjectView(QXmlStreamReader &xml) = 0;
+        virtual ObjectView *createObjectView(float posx, float posy) = 0;
+
         const QByteArray objectViewToXML(const ObjectView &objectView) const;
         void fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml);
 
@@ -42,6 +44,13 @@ namespace trei
 
             return new T(name, posx, posy, width, height, angle,
                          lock, lineColor, lineWidth, fill, fillColor);
+        }
+
+        template <typename T>
+        T *createCommonObjectView(const QString &name, float posx, float posy) {
+            static_assert(std::is_base_of<ObjectView, T>::value, "T must be a descendant of ObjectView");
+
+            return new T(name, posx, posy);
         }
 
         virtual void addAdditionalXMLElements(const ObjectView &objectView, QXmlStreamWriter &xml) const ;

@@ -28,6 +28,7 @@ namespace trei
 
         return factories[className]->createObjectView(xml);
     }
+
     const QByteArray Factories::objectViewToXML(const ObjectView &objectView) const
     {
         QString className = objectView.metaObject()->className();
