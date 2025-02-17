@@ -118,13 +118,12 @@ namespace trei
     void Window::initQtPropertyBrowser()
     {
         propertyBrowser = new PropertyBrowserDockWidget("Свойства", this);
+
         addDockWidget(Qt::RightDockWidgetArea, propertyBrowser);
     }
 
     void Window::contextMenuEvent(QContextMenuEvent *event)
     {
-        qDebug() << "contextMenuEvent";
-
         QMenu menu(this);
         menu.addMenu(createCreationMenu(QPoint(event->pos())));
 
@@ -142,7 +141,7 @@ namespace trei
     }
 
     void Window::mousePressEvent(QMouseEvent *event)
-    {        
+    {
         propertyBrowser->hidePropertyBrowser();
 
         for (ObjectView *obj : objectViews)
@@ -358,13 +357,13 @@ namespace trei
 
     void Window::createObjectView(const QString &className, const QPoint &pos)
     {
-        ObjectView *newObjectView = ObjectViewFactory2::instance().createObjectView(className, pos.x(), pos.y());
+        ObjectView *newObjectView = ObjectViewFactories::instance().createObjectView(className, pos.x(), pos.y());
         addObjectView(newObjectView);
     }
 
     void Window::paste(const QPoint &pos)
     {
-        if (copyObjectView)
+        if (!copyObjectView)
         {
             return;
         }

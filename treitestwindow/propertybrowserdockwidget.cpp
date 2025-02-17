@@ -48,6 +48,7 @@ namespace trei
 
         variantManager->clear();
         propertyBrowser->clear();
+        //patentProperty.clear();
 
         const QMetaObject *metaObject = objectView->metaObject();
         const QMetaObject *objectViewMeta = &ObjectView::staticMetaObject;
@@ -74,12 +75,23 @@ namespace trei
                 for (int j = 0; j < array.size(); ++j)
                 {
                     QString pointName = QString("%1").arg(j);
-                    QVariant q = array[j];
-                    QtVariantProperty *arrayElementProperty = variantManager->addProperty(q.type(), pointName);
-                    arrayElementProperty->setValue(q);
-                    arrayProp->addSubProperty(arrayElementProperty);
+                    QVariant variant = array[j];
+                    QtVariantProperty *arrayElementProp = variantManager->addProperty(variant.type(), pointName);
+                    arrayElementProp->setValue(variant);
+
+                    //QtVariantProperty *arrayElementProperty = variantManager->addProperty(QVariant::String, pointName);
+                    //qDebug() << array[j].toString();
+                    //arrayElementProperty->setValue(array[j]);
+
+                    //arrayElementProperty->setModified(false);
+                    //patentProperty.insert(arrayElementProp, arrayProp);
+
+                    arrayElementProp->setModified(false);
+                    //arrayElementProp->setEnabled(false);
+                    arrayProp->addSubProperty(arrayElementProp);
                 }
 
+                arrayProp->setModified(false);
                 propertyBrowser->addProperty(arrayProp);
             }
             else
@@ -102,9 +114,18 @@ namespace trei
             return;
         }
 
-        const QMetaObject *metaObject = selectedObjectView->metaObject();
 
+        const QMetaObject *metaObject = selectedObjectView->metaObject();
         int propertyIndex = metaObject->indexOfProperty(property->propertyName().toStdString().c_str());
+
+        //int propertyIndex = patentProperty.contains(property) ?
+        //                    metaObject->indexOfProperty(patentProperty[property]->propertyName().toStdString().c_str()):
+        //                    metaObject->indexOfProperty(property->propertyName().toStdString().c_str());
+        ////if(patentProperty.contains(property))
+        ////{
+        ////    qDebug() << "patentProperty[property]->propertyName().toStdString().c_str() " <<
+        ////        patentProperty[property]->propertyName().toStdString().c_str();
+        ////}
 
         if (propertyIndex != -1)
         {
@@ -112,7 +133,7 @@ namespace trei
 
             if (metaProperty.userType() == qMetaTypeId<QVariantList>())
             {
-
+                //qDebug() << "//// " << value.toFloat();
             }
             else
             {

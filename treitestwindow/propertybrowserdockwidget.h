@@ -36,6 +36,8 @@ namespace trei
         void loadPropertyBrowser(const ObjectView *objectView);
 
         ObjectView *selectedObjectView = nullptr;
+
+        //QMap<QtProperty*, QtProperty*> patentProperty;
     };
 }
 #endif // PROPERTYBROWSERDOCKWIDGET_H

@@ -10,7 +10,7 @@
 #include <qttreepropertybrowser.h>
 #include <qtvariantproperty.h>
 
-#include "factories2/objectviewfactory2.h"
+#include "objectfactories/objectviewfactories.h"
 #include "propertybrowserdockwidget.h"
 
 namespace trei

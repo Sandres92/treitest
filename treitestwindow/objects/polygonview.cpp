@@ -14,7 +14,8 @@ namespace trei
     PolygonView::PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int linewidth, bool fill, const QColor &fillColor)
         : ObjectView(name, posx, posy, width, height, angle, lock, lineColor, linewidth, fill, fillColor)
-    {}
+    {
+    }
 
     void PolygonView::paintEvent(QPaintEvent *)
     {
@@ -33,7 +34,6 @@ namespace trei
 
     void PolygonView::mousePressEventHandler()
     {
-        qDebug() << "EllipseView::mousePressEvent";
     }
 
     QVector<QPointF> PolygonView::getCoords() const
@@ -53,7 +53,7 @@ namespace trei
         return points.join("; ");
     }
 
-    QVariantList PolygonView::getCoordsVL() const
+    QVariantList PolygonView::getCoordsAsVariantList() const
     {
         QVariantList list;
 
@@ -63,6 +63,17 @@ namespace trei
         }
 
         return list;
+    }
+
+    void PolygonView::setCoordsFromVariantList(const QVariantList& coordsVariantList)
+    {
+        coords.clear();
+        for(int i = 0; i < coordsVariantList.size(); i++)
+        {
+            coords.append(coordsVariantList[i].toPointF());
+        }
+
+        repaint();
     }
 
     void PolygonView::addCoord(const QPointF &coord)

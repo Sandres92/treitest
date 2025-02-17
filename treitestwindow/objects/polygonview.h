@@ -17,7 +17,7 @@ namespace trei
         Q_OBJECT
         //Q_PROPERTY(QString coords READ getCoordsString)
         //Q_PROPERTY(QVector<QPointF> coords READ getCoords)
-        Q_PROPERTY(QVariantList coords READ getCoordsVL)
+        Q_PROPERTY(QVariantList coords READ getCoordsAsVariantList WRITE setCoordsFromVariantList)
 
     public:
         explicit PolygonView() = default;
@@ -30,7 +30,8 @@ namespace trei
         void addCoord(const QPointF &coord);
         QVector<QPointF> getCoords() const;
         QString getCoordsString() const;
-        QVariantList getCoordsVL() const;
+        QVariantList getCoordsAsVariantList() const;
+        void setCoordsFromVariantList(const QVariantList& coordsVariantList);
         PolygonView *clone() override;
 
     protected:

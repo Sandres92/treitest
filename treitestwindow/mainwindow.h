@@ -26,8 +26,6 @@ public:
 
 private slots:
     void slotShortcutCtrlS();
-    void slotShortcutCtrlZ();
-    void slotShortcutCtrlD();
 
 private:
     Ui::MainWindow *ui;
@@ -39,11 +37,6 @@ private:
     QList<Window *> windows;
 
     QShortcut *keyCtrlS;
-    QShortcut *keyCtrlZ;
-
-    QShortcut *keyCtrlD;
-    QShortcut *keyCtrlC;
-    QShortcut *keyCtrlV;
 
     void initHotKey();
     void saveWindow();

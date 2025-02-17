@@ -33,7 +33,6 @@ namespace trei
 
     void RectangleView::mousePressEventHandler()
     {
-        qDebug() << "RectangleView::mousePressEvent";
     }
 
     RectangleView *RectangleView::clone()

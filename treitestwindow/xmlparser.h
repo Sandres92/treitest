@@ -3,7 +3,7 @@
 
 #include <QMap>
 #include <QString>
-#include "factories/factories.h"
+#include "objectfactories/factories.h"
 
 namespace trei
 {

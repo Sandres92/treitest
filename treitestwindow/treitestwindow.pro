@@ -9,34 +9,42 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    factories/factories.cpp \
-    factories2/objectviewfactory2.cpp \
+    objectfactories/factories.cpp \
+    objectfactories/objectviewfactories.cpp \
     main.cpp \
     mainwindow.cpp \
     engine.cpp \
-    factories/ellipseviewfactory.cpp \
-    factories/objectviewfactory.cpp \
-    factories/polygonviewfactory.cpp \
-    factories/rectangleviewfactory.cpp \
-    factories/windowfactory.cpp \
+    objectfactories/ellipseviewfactory.cpp \
+    objectfactories/objectviewfactory.cpp \
+    objectfactories/polygonviewfactory.cpp \
+    objectfactories/rectangleviewfactory.cpp \
+    objectfactories/windowfactory.cpp \
     objects/objectview.cpp \
     objects/ellipseview.cpp \
     objects/polygonview.cpp \
     objects/rectangleview.cpp \
     propertybrowserdockwidget.cpp \
     window.cpp \
+    xmlfactories/xmlellipseviewfactory.cpp \
+    xmlfactories/xmlfactories.cpp \
+    xmlfactories/xmlobjectviewfactories.cpp \
+    xmlfactories/xmlobjectviewfactory.cpp \
+    xmlfactories/xmlpolygonviewfactory.cpp \
+    xmlfactories/xmlrectangleviewfactory.cpp \
+    xmlfactories/xmlwindowfactory.cpp \
+    xmlfactory.cpp \
     xmlparser.cpp
 
 HEADERS += \
-    factories/factories.h \
-    factories2/objectviewfactory2.h \
+    objectfactories/factories.h \
+    objectfactories/objectviewfactories.h \
     mainwindow.h \
     engine.h \
-    factories/ellipseviewfactory.h \
-    factories/objectviewfactory.h \
-    factories/polygonviewfactory.h \
-    factories/rectangleviewfactory.h \
-    factories/windowfactory.h \
+    objectfactories/ellipseviewfactory.h \
+    objectfactories/objectviewfactory.h \
+    objectfactories/polygonviewfactory.h \
+    objectfactories/rectangleviewfactory.h \
+    objectfactories/windowfactory.h \
     objects/objectview.h \
     objects/ellipseview.h \
     objects/polygonview.h \
@@ -44,6 +52,14 @@ HEADERS += \
     propertybrowserdockwidget.h \
     utility/convector.h \
     window.h \
+    xmlfactories/xmlellipseviewfactory.h \
+    xmlfactories/xmlfactories.h \
+    xmlfactories/xmlobjectviewfactories.h \
+    xmlfactories/xmlobjectviewfactory.h \
+    xmlfactories/xmlpolygonviewfactory.h \
+    xmlfactories/xmlrectangleviewfactory.h \
+    xmlfactories/xmlwindowfactory.h \
+    xmlfactory.h \
     xmlparser.h
 
 FORMS += \
