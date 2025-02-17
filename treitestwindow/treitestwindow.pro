@@ -23,6 +23,7 @@ SOURCES += \
     objects/ellipseview.cpp \
     objects/polygonview.cpp \
     objects/rectangleview.cpp \
+    propertybrowserdockwidget.cpp \
     window.cpp \
     xmlparser.cpp
 
@@ -40,6 +41,7 @@ HEADERS += \
     objects/ellipseview.h \
     objects/polygonview.h \
     objects/rectangleview.h \
+    propertybrowserdockwidget.h \
     utility/convector.h \
     window.h \
     xmlparser.h

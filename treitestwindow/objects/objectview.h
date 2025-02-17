@@ -92,7 +92,7 @@ namespace trei
             void onDeleteObjectView(ObjectView *newObjectView);
 
             void onBeginDrag(ObjectView *objectView);
-            void onEndDrag(ObjectView *objectView);
+            void onEndDrag(const ObjectView *objectView);
 
             void onNameChanged(const QString &name);
             void onPosxChanged(float posx);

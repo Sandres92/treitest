@@ -11,6 +11,7 @@
 #include <qtvariantproperty.h>
 
 #include "factories2/objectviewfactory2.h"
+#include "propertybrowserdockwidget.h"
 
 namespace trei
 {
@@ -68,7 +69,7 @@ namespace trei
         void onDuplicateObjectView(ObjectView *objectView);
         void onDeleteObjectView(ObjectView *objectView);
 
-        void onEndDragObjectView(ObjectView *objectView);
+        void onEndDragObjectView(const ObjectView *objectView);
 
         void onHotKeyDuplicate();
         void onHotKeyCopy();
@@ -76,8 +77,6 @@ namespace trei
         void onHotKeyDelete();
         void onSaveAction();
         void onPropertyAction();
-
-        void propertyBrowserValueChanged(QtProperty *property, const QVariant &value);
 
     private:
         void initWindow();
@@ -87,10 +86,6 @@ namespace trei
 
         void selectObjectView(ObjectView *objectView);
         void unselectObjectView();
-
-        void showPropertyBrowser(const ObjectView *objectView);
-        void loadPropertyBrowser(const ObjectView *objectView);
-        void hidePropertyBrowser();
 
         QString name;
         QColor color;
@@ -116,12 +111,9 @@ namespace trei
         QShortcut *keyCtrlDel;
 
         QWidget *centralWidget;
-        QDockWidget *dockWidget;
-
-        QtTreePropertyBrowser *propertyBrowser;
-        QtVariantPropertyManager *variantManager;
-        QMetaObject::Connection variantManagerConnection;
         QMenu *createCreationMenu(const QPoint &pos);
+
+        PropertyBrowserDockWidget *propertyBrowser = nullptr;
     };
 }
 #endif // WINDOW_H
