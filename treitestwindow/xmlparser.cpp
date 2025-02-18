@@ -72,8 +72,6 @@ namespace trei
             }
         }
 
-        qDebug() << "windows.size()  load " <<  windows.size();
-
         for (int i = 0; i < windows.size(); i++)
         {
             windows[i]->show();

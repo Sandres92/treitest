@@ -72,3 +72,9 @@ void MainWindow::createNewWindow()
     windows.append(newWindow);
 }
 
+
+void MainWindow::on_actionQuit_triggered()
+{
+    QApplication::quit();
+}
+

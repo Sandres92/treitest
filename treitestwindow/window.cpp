@@ -165,6 +165,17 @@ namespace trei
         selectedObjectView = nullptr;
     }
 
+    void Window::resizeEvent(QResizeEvent *event)
+    {
+        windowWidth = event->size().width();
+        windowHeight = event->size().height();
+    }
+    void Window::moveEvent(QMoveEvent *event)
+    {
+        posx = event->pos().x();
+        posy = event->pos().y();
+    }
+
     void Window::setName(const QString &name)
     {
         this->name = name;

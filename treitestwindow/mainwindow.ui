@@ -36,6 +36,8 @@
     </property>
     <addaction name="actionNew"/>
     <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -48,6 +50,11 @@
   <action name="actionSave">
    <property name="text">
     <string>Сохранить всё</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Закрыть</string>
    </property>
   </action>
  </widget>

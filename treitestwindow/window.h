@@ -62,6 +62,9 @@ namespace trei
         void contextMenuEvent(QContextMenuEvent *event) override;
         void mousePressEvent(QMouseEvent *event) override;
 
+        void resizeEvent(QResizeEvent *event) override;
+        void moveEvent(QMoveEvent *event) override;
+
     private slots:
         void createObjectView(const QString &className, const QPoint &pos);
         void paste(const QPoint &pos);
