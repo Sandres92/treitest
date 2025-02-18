@@ -20,7 +20,7 @@ namespace trei
         Q_PROPERTY(QVariantList coords READ getCoordsAsVariantList WRITE setCoordsFromVariantList)
 
     public:
-        explicit PolygonView() = default;
+        explicit PolygonView();
         explicit PolygonView(const QString &name, float posx, float posy);
         explicit PolygonView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                              const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
@@ -31,12 +31,15 @@ namespace trei
         QVector<QPointF> getCoords() const;
         QString getCoordsString() const;
         QVariantList getCoordsAsVariantList() const;
-        void setCoordsFromVariantList(const QVariantList& coordsVariantList);
+        void setCoordsFromVariantList(const QVariantList &coordsVariantList);
         PolygonView *clone() override;
 
     protected:
         void paintEvent(QPaintEvent *) override;
         void mousePressEventHandler() override;
+
+        void saveToStream(QDataStream &out) const override;
+        void loadFromStream(QDataStream &in) override;
 
     private:
         QVector<QPointF> coords;

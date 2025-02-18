@@ -6,6 +6,7 @@
 #include <QString>
 #include <QColor>
 #include <QRubberBand>
+#include "utility/convector.h"
 
 namespace trei
 {
@@ -30,113 +31,110 @@ namespace trei
         //signals:
         //    void nameChanged(int newName);
 
-        public:
-            explicit ObjectView();
-            explicit ObjectView(const QString &name);
-            explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
-                                int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
-            explicit ObjectView(const ObjectView &other);
+    public:
+        explicit ObjectView();
+        explicit ObjectView(const QString &name);
+        explicit ObjectView(const QString &name, float posx, float posy, float width, float height,
+                            int angle, bool lock, const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor);
+        explicit ObjectView(const ObjectView &other);
 
-            virtual ~ObjectView() = default;
+        virtual ~ObjectView() = default;
 
-            virtual ObjectView *clone() = 0;
+        virtual ObjectView *clone() = 0;
 
-            void setName(const QString &name);
-            QString getName() const;
-            void setPosx(float posx);
-            float getPosx() const;
-            void setPosy(float posy);
-            float getPosy() const;
-            void setPos(float posx, float posy);
-            void setWidth(float width);
-            float getWidth() const;
-            void setHeight(float height);
-            float getHeight() const;
-            void setSize(float width, float height);
-            void setAngle(int angle);
-            int getAngle() const;
-            void setLock(bool lock);
-            bool getLock() const;
-            void setLineColor(const QColor &lineColor);
-            QColor getLineColor() const;
-            void setLineWidth(int lineWidth);
-            int getLineWidth() const;
-            void setFill(bool fill);
-            bool getFill() const;
-            void setFillColor(const QColor &fillColor);
-            QColor getFillColor() const;
+        void setName(const QString &name);
+        QString getName() const;
+        void setPosx(float posx);
+        float getPosx() const;
+        void setPosy(float posy);
+        float getPosy() const;
+        void setPos(float posx, float posy);
+        void setWidth(float width);
+        float getWidth() const;
+        void setHeight(float height);
+        float getHeight() const;
+        void setSize(float width, float height);
+        void setAngle(int angle);
+        int getAngle() const;
+        void setLock(bool lock);
+        bool getLock() const;
+        void setLineColor(const QColor &lineColor);
+        QColor getLineColor() const;
+        void setLineWidth(int lineWidth);
+        int getLineWidth() const;
+        void setFill(bool fill);
+        bool getFill() const;
+        void setFillColor(const QColor &fillColor);
+        QColor getFillColor() const;
 
-            void select();
-            void unselect() const;
+        void select();
+        void unselect() const;
 
-        friend QDataStream &operator<<(QDataStream &out, ObjectView &objectView)
-        {
-            out << objectView.name << objectView.posx << objectView.posy << objectView.width <<
-                objectView.height << objectView.angle << objectView.lock << objectView.lineColor <<
-                objectView.lineWidth << objectView.fill << objectView.fillColor;
+        friend QDataStream &operator<<(QDataStream &out, ObjectView &objectView) {
+            objectView.saveToStream(out);
             return out;
         }
 
-        friend QDataStream &operator>>(QDataStream &in, ObjectView &objectView)
-        {
-            in >> objectView.name >> objectView.posx >> objectView.posy >> objectView.width >>
-                objectView.height >> objectView.angle >> objectView.lock >> objectView.lineColor >>
-                objectView.lineWidth >> objectView.fill >> objectView.fillColor;
+        friend QDataStream &operator>>(QDataStream &in, ObjectView &objectView) {
+            objectView.loadFromStream(in);
             return in;
         }
 
-        signals:
-            void onClickObjectView(ObjectView *objectView);
-            void onCopyObjectView(ObjectView *originObjectView);
-            void onDuplicateObjectView(ObjectView *newObjectView);
-            void onDeleteObjectView(ObjectView *newObjectView);
+    signals:
+        void onClickObjectView(ObjectView *objectView);
+        void onCopyObjectView(ObjectView *originObjectView);
+        void onDuplicateObjectView(ObjectView *newObjectView);
+        void onDeleteObjectView(ObjectView *newObjectView);
 
-            void onBeginDrag(ObjectView *objectView);
-            void onEndDrag(const ObjectView *objectView);
+        void onBeginDrag(ObjectView *objectView);
+        void onEndDrag(const ObjectView *objectView);
 
-            void onNameChanged(const QString &name);
-            void onPosxChanged(float posx);
-            void onPosyChanged(float posy);
+        void onNameChanged(const QString &name);
+        void onPosxChanged(float posx);
+        void onPosyChanged(float posy);
 
-        protected:
-            void mousePressEvent(QMouseEvent *event) override;
-            void mouseMoveEvent(QMouseEvent *evt) override;
-            void mouseReleaseEvent(QMouseEvent *) override;
-            void contextMenuEvent(QContextMenuEvent *event) override;
+    protected:
+        void mousePressEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *evt) override;
+        void mouseReleaseEvent(QMouseEvent *) override;
+        void contextMenuEvent(QContextMenuEvent *event) override;
 
-            //void dragEnterEvent(QDragEnterEvent *event) override;
-            //void dragMoveEvent(QDragMoveEvent *event) override;
-            //void dropEvent(QDropEvent *event) override;
-            //void dragLeaveEvent(QDragLeaveEvent *event) override;
+        //void dragEnterEvent(QDragEnterEvent *event) override;
+        //void dragMoveEvent(QDragMoveEvent *event) override;
+        //void dropEvent(QDropEvent *event) override;
+        //void dragLeaveEvent(QDragLeaveEvent *event) override;
 
-            virtual void mousePressEventHandler() = 0;
+        virtual void mousePressEventHandler() = 0;
 
-            void cloneCommonField(ObjectView &clonedObjectView);
-            void resizeObjectView();
+        void cloneCommonField(ObjectView &clonedObjectView);
+        void resizeObjectView();
 
-            QString name = "";
-            float posx = 0.f;
-            float posy = 0.f;
-            float width = 0.f;
-            float height = 0.f;
-            int angle = 0.f;
-            bool lock = false;
-            QColor lineColor ;
-            int lineWidth = 0;
-            bool fill = 0;
-            QColor fillColor;
+        virtual void saveToStream(QDataStream &out) const;
+        virtual void loadFromStream(QDataStream &in);
 
-            QPoint mousePoint;
-            QRubberBand* rubberBand;
+        QString name = "";
+        float posx = 0.f;
+        float posy = 0.f;
+        float width = 0.f;
+        float height = 0.f;
+        int angle = 0.f;
+        bool lock = false;
+        QColor lineColor ;
+        int lineWidth = 0;
+        bool fill = 0;
+        QColor fillColor;
 
-        private slots:
-            void copy();
-            void duplicate();
-            void deleteObjectView();
+        QPoint mousePoint;
+        QRubberBand *rubberBand;
 
-        private:
-            void init();
-            bool isDragged = false;
+    private slots:
+        void copy();
+        void duplicate();
+        void deleteObjectView();
+
+    private:
+        void init();
+        bool isDragged = false;
     };
 }
 #endif // OBJECTVIEW_H

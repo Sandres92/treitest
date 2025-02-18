@@ -31,7 +31,7 @@ namespace trei
         delete keyCtrlV;
 
         selectedObjectView = nullptr;
-        copyObjectView = nullptr;
+        //copyObjectView = nullptr;
 
         delete centralWidget;
         delete propertyBrowser;
@@ -148,6 +148,7 @@ namespace trei
         {
             obj->unselect();
         }
+
         selectedObjectView = nullptr;
     }
 
@@ -323,7 +324,20 @@ namespace trei
 
     void Window::onCopyObjectView(ObjectView *objectView)
     {
-        copyObjectView = objectView;
+        QByteArray copyBuffer;
+        QDataStream out(&copyBuffer, QIODevice::WriteOnly);
+        out << Convector::fulCalssNameToShort(objectView->metaObject()->className());
+        out << *objectView;
+
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->clear();
+
+        QMimeData *mimeData = new QMimeData();
+        mimeData->setData("application/x-objectview", copyBuffer);
+
+        clipboard->setMimeData(mimeData);
+
+        //copyObjectView = objectView;
     }
 
     void Window::onDuplicateObjectView(ObjectView *objectView)
@@ -363,24 +377,54 @@ namespace trei
 
     void Window::paste(const QPoint &pos)
     {
-        if (!copyObjectView)
+        const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+
+        if (!mimeData->hasFormat("application/x-objectview"))
         {
             return;
         }
 
-        ObjectView *newObjectView  = copyObjectView->clone();
-        float posx = pos.x();
-        float posy = pos.y();
+        QByteArray copyBuffer = mimeData->data("application/x-objectview");
+        QDataStream in(&copyBuffer, QIODevice::ReadOnly);
+        QString className;
+        in >> className;
 
-        newObjectView->setPos(posx, posy);
-        newObjectView->select();
+        ObjectView *newObjectView = ObjectViewFactories::instance().createObjectView(className);
 
-        addObjectView(newObjectView);
+        if (newObjectView)
+        {
+            in >> *newObjectView;
 
-        unselectObjectView();
-        selectObjectView(newObjectView);
+            addObjectView(newObjectView);
 
-        copyObjectView = selectedObjectView;
+            float posx = pos.x();
+            float posy = pos.y();
+            newObjectView->setPos(posx, posy);
+
+            unselectObjectView();
+
+            newObjectView->select();
+            selectObjectView(newObjectView);
+        }
+
+        //if (!copyObjectView)
+        //{
+        //    return;
+        //}
+        //
+        //ObjectView *newObjectView  = copyObjectView->clone();
+        //float posx = pos.x();
+        //float posy = pos.y();
+        //
+        //newObjectView->setPos(posx, posy);
+        //newObjectView->select();
+        //
+        //addObjectView(newObjectView);
+        //
+        //unselectObjectView();
+        //selectObjectView(newObjectView);
+        //
+        //copyObjectView = selectedObjectView;
     }
 
     void Window::onHotKeyDuplicate()
@@ -405,15 +449,20 @@ namespace trei
 
     void Window::onHotKeyPaste()
     {
-        if (!copyObjectView)
+        //if (!copyObjectView)
+        //{
+        //    return;
+        //}
+        const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+
+        if (!mimeData)
         {
             return;
         }
 
-        float posx = copyObjectView->getPosx() + 10.f;
-        float posy = copyObjectView->getPosy() + 10.f;
-
-        paste(QPoint(posx, posy));
+        //float posx = copyObjectView->getPosx() + 10.f;
+        //float posy = copyObjectView->getPosy() + 10.f;
+        paste(QPoint(windowWidth / 3.f, windowHeight / 3.f));
     }
 
     void Window::onHotKeyDelete()
@@ -429,11 +478,6 @@ namespace trei
     void Window::onSaveAction()
     {
         qDebug() << "save";
-    }
-
-    void Window::onPropertyAction()
-    {
-
     }
 }
 

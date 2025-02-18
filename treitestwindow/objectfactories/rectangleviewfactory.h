@@ -8,6 +8,7 @@ namespace trei
     class RectangleViewFactory: public ObjectViewFactory
     {
     public:
+        ObjectView *createObjectView() override;
         ObjectView *createObjectView(QXmlStreamReader &xml) override;
         ObjectView *createObjectView(float posx, float posy) override;
     };

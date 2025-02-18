@@ -5,6 +5,9 @@
 
 namespace trei
 {
+    PolygonView::PolygonView(): ObjectView("Полигон")
+    { }
+
     PolygonView::PolygonView(const QString &name, float posx, float posy) : ObjectView(name, posx, posy, 118.f, 98.f, 0, false,
                 QColor(0, 0, 0, 255), 2, true, QColor(51, 77, 179, 255))
     {
@@ -65,10 +68,11 @@ namespace trei
         return list;
     }
 
-    void PolygonView::setCoordsFromVariantList(const QVariantList& coordsVariantList)
+    void PolygonView::setCoordsFromVariantList(const QVariantList &coordsVariantList)
     {
         coords.clear();
-        for(int i = 0; i < coordsVariantList.size(); i++)
+
+        for (int i = 0; i < coordsVariantList.size(); i++)
         {
             coords.append(coordsVariantList[i].toPointF());
         }
@@ -97,5 +101,17 @@ namespace trei
         newObjectView->setCoords(this->coords);
 
         return newObjectView;
+    }
+
+    void PolygonView::saveToStream(QDataStream &out) const
+    {
+        ObjectView::saveToStream(out);
+        out << coords;
+    }
+
+    void PolygonView::loadFromStream(QDataStream &in)
+    {
+        ObjectView::loadFromStream(in);
+        in >> coords;
     }
 }

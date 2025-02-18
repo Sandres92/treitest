@@ -4,6 +4,12 @@
 
 namespace trei
 {
+    ObjectView *EllipseViewFactory::createObjectView()
+    {
+        EllipseView *ellipseView = new EllipseView();
+        return ellipseView;
+    }
+
     ObjectView *EllipseViewFactory::createObjectView(QXmlStreamReader &xml)
     {
         EllipseView *ellipseView = createCommonObjectView<EllipseView>(xml);

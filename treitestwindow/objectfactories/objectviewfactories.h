@@ -21,6 +21,7 @@ namespace trei
         }
 
         bool isContainsFactory(const QString &className);
+        ObjectView *createObjectView(const QString &className);
         ObjectView *createObjectView(const QString &className, QXmlStreamReader &xml);
         ObjectView *createObjectView(const QString &className, float posx, float posy);
 

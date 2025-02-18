@@ -76,7 +76,6 @@ namespace trei
         void onHotKeyPaste();
         void onHotKeyDelete();
         void onSaveAction();
-        void onPropertyAction();
 
     private:
         void initWindow();
@@ -103,8 +102,6 @@ namespace trei
         QList<ObjectView *> objectViews;
         ObjectView *selectedObjectView = nullptr;
 
-        ObjectView *copyObjectView = nullptr;
-
         QShortcut *keyCtrlD;
         QShortcut *keyCtrlC;
         QShortcut *keyCtrlV;
@@ -114,6 +111,8 @@ namespace trei
         QMenu *createCreationMenu(const QPoint &pos);
 
         PropertyBrowserDockWidget *propertyBrowser = nullptr;
+
+        //ObjectView *copyObjectView = nullptr;
     };
 }
 #endif // WINDOW_H

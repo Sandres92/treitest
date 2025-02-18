@@ -4,6 +4,12 @@
 
 namespace trei
 {
+    ObjectView *RectangleViewFactory::createObjectView()
+    {
+        RectangleView *rectangleView = new RectangleView();
+        return rectangleView;
+    }
+
     ObjectView *RectangleViewFactory::createObjectView(QXmlStreamReader &xml)
     {
         return createCommonObjectView<RectangleView>(xml);

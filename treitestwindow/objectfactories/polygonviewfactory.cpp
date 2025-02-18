@@ -6,6 +6,12 @@
 
 namespace trei
 {
+    ObjectView *PolygonViewFactory::createObjectView()
+    {
+        PolygonView *polygonView = new PolygonView();
+        return polygonView;
+    }
+
     ObjectView *PolygonViewFactory::createObjectView(QXmlStreamReader &xml)
     {
         PolygonView *polygonView = createCommonObjectView<PolygonView>(xml);

@@ -23,6 +23,16 @@ namespace trei
         return factories.contains(className);
     }
 
+    ObjectView *ObjectViewFactories::createObjectView(const QString &className)
+    {
+        if (!factories.contains(className))
+        {
+            return nullptr;
+        }
+
+        return factories[className]->createObjectView();
+    }
+
     ObjectView *ObjectViewFactories::createObjectView(const QString &className, QXmlStreamReader &xml)
     {
         if (!factories.contains(className))

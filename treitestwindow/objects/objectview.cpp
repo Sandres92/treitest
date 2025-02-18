@@ -13,6 +13,11 @@ namespace trei
         init();
     }
 
+    ObjectView::ObjectView(const QString &name): name(name)
+    {
+        init();
+    }
+
     ObjectView::ObjectView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                            const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor)
         : name(name), posx(posx), posy(posy), width(width), height(height), angle(angle), lock(lock),
@@ -22,8 +27,9 @@ namespace trei
     }
 
     ObjectView::ObjectView(const ObjectView &other)
-        : name(other.name), posx(other.posx), posy(other.posy), width(other.width), height(other.height), angle(other.angle), lock(other.lock),
-        lineColor(other.lineColor), lineWidth(other.lineWidth), fill(other.fill), fillColor(other.fillColor)
+        : name(other.name), posx(other.posx), posy(other.posy), width(other.width), height(other.height), angle(other.angle),
+          lock(other.lock),
+          lineColor(other.lineColor), lineWidth(other.lineWidth), fill(other.fill), fillColor(other.fillColor)
     {
         init();
     }
@@ -59,7 +65,7 @@ namespace trei
     void ObjectView::setPosy(float posy)
     {
         this->posy = posy;
-        move(this->posx, posy);        
+        move(this->posx, posy);
         emit onPosxChanged(posy);
     }
     void ObjectView::setPos(float posx, float posy)
@@ -101,9 +107,24 @@ namespace trei
     }
 
     void ObjectView::resizeObjectView()
-    {        
-        rubberBand->setGeometry(QRect(-lineWidth/2.f, -lineWidth/2.f, width + lineWidth, height + lineWidth));
+    {
+        rubberBand->setGeometry(QRect(-lineWidth / 2.f, -lineWidth / 2.f, width + lineWidth, height + lineWidth));
         resize(width + lineWidth, height + lineWidth);
+    }
+
+    void ObjectView::saveToStream(QDataStream &out) const
+    {
+        out << name << posx << posy << width << height << angle
+            << lock << lineColor << lineWidth << fill << fillColor;
+    }
+
+    void ObjectView::loadFromStream(QDataStream &in)
+    {
+        in >> name >> posx >> posy >> width >> height >> angle
+           >> lock >> lineColor >> lineWidth >> fill >> fillColor;
+
+        move(posx, posy);
+        resizeObjectView();
     }
 
     void ObjectView::setAngle(int angle)
@@ -204,25 +225,26 @@ namespace trei
 
     void ObjectView::mouseMoveEvent(QMouseEvent *event)
     {
-        if(lock)
+        if (lock)
         {
             return;
         }
+
         const QPointF delta = event->globalPos() - mousePoint;
 
-        if(delta.x()*delta.x() < 9 &&
+        if (delta.x()*delta.x() < 9 &&
             delta.y()*delta.y() < 9)
         {
             return;
         }
 
-        if(!isDragged)
+        if (!isDragged)
         {
             isDragged = true;
             emit onBeginDrag(this);
         }
 
-        move(x()+delta.x(), y()+delta.y());
+        move(x() + delta.x(), y() + delta.y());
 
         posx += delta.x();
         posy += delta.y();
@@ -232,7 +254,7 @@ namespace trei
 
     void ObjectView::mouseReleaseEvent(QMouseEvent *)
     {
-        if(isDragged)
+        if (isDragged)
         {
             isDragged = false;
             emit onEndDrag(this);

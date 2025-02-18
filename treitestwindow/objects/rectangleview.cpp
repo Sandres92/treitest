@@ -4,6 +4,8 @@
 
 namespace trei
 {
+    RectangleView::RectangleView(): ObjectView("Прямоугольник")
+    { }
     RectangleView::RectangleView(const QString &name, float posx, float posy, float width, float height, int angle, bool lock,
                                  const QColor &lineColor, int lineWidth, bool fill, const QColor &fillColor)
         : ObjectView(name, posx, posy, width, height, angle, lock, lineColor, lineWidth, fill, fillColor)

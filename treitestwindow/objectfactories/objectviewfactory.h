@@ -15,6 +15,7 @@ namespace trei
         explicit ObjectViewFactory() = default;
         virtual ~ObjectViewFactory() = default;
 
+        virtual ObjectView *createObjectView() = 0;
         virtual ObjectView *createObjectView(QXmlStreamReader &xml) = 0;
         virtual ObjectView *createObjectView(float posx, float posy) = 0;
 

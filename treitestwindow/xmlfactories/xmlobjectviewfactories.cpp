@@ -4,6 +4,8 @@
 #include "xmlrectangleviewfactory.h"
 #include "xmlpolygonviewfactory.h"
 
+#include "utility/convector.h"
+
 namespace trei
 {
     XMLObjectViewFactories::XMLObjectViewFactories()
@@ -20,13 +22,7 @@ namespace trei
 
     void XMLObjectViewFactories::fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml)
     {
-        QString className = objectView.metaObject()->className();
-        int doubleColonIndex = className.lastIndexOf("::");
-
-        if (doubleColonIndex != -1)
-        {
-            className = className.mid(doubleColonIndex + 2);
-        }
+        QString className = Convector::fulCalssNameToShort(objectView.metaObject()->className());
 
         if (factories.contains(className))
         {

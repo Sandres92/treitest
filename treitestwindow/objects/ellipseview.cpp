@@ -5,7 +5,8 @@
 
 namespace trei
 {
-    EllipseView::EllipseView() {}
+    EllipseView::EllipseView(): ObjectView("Эллипс")
+    { }
 
     EllipseView::EllipseView(const QString &name, float posx, float posy) : ObjectView(name, posx, posy, 75.f, 75.f, 0, false,
                 QColor(0, 0, 0, 255), 2, true, QColor(204, 51, 51, 255))
@@ -45,7 +46,7 @@ namespace trei
         EllipseView *newObjectView = new EllipseView(this->name, this->posx, this->posy, this->width,
                                                      this->height, this->angle, this->lock, this->lineColor,
                                                      this->lineWidth, this->fill, this->fillColor);
-        newObjectView->setParent(this->parentWidget());
+        //newObjectView->setParent(this->parentWidget());
         return newObjectView;
     }
 }
