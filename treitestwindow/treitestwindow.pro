@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -104,25 +104,18 @@ DISTFILES += \
 CONFIG(release, debug|release): DESTDIR = $$OUT_PWD/
 CONFIG(debug, debug|release): DESTDIR = $$OUT_PWD/
 
-copy_to_build.path = $$DESTDIR
-copy_to_build.files = resources/window_description.xml
+exists($$OUT_PWD/window_description.xml) {
+    message("Файл уже существует: $$XML_DEST")
+} else {
+    message("Копирование файла: $$XML_SOURCE -> $$XML_DEST")
 
-INSTALLS += \
-    copy_to_build
+    #copy_to_build.path = $$DESTDIR
+    #copy_to_build.files = $$XML_SOURCE
+    #INSTALLS += copy_to_build
 
-#XML_SOURCE = $$PWD/resources/window_description.xml
-#XML_DEST = $$OUT_PWD/window_description.xml
-#
-#exists($$XML_SOURCE)
-#{
-#    message("Copy window_description.xml from $$XML_SOURCE в $$XML_DEST")
-#
-#    win32 {
-#        QMAKE_POST_LINK += xcopy /Y /Q \"$$shell_path($$XML_SOURCE)\" \"$$shell_path($$XML_DEST)\"$$escape_expand(\\n\\t)
-#    }
-#    unix {
-#        QMAKE_POST_LINK += cp -f $$XML_SOURCE $$XML_DEST$$escape_expand(\\n\\t)
-#    }
-#} else {
-#    error("File not found: $$XML_SOURCE")
-#}
+    copy_to_build.path = $$DESTDIR
+    copy_to_build.files = resources/window_description.xml
+
+    INSTALLS += \
+        copy_to_build
+}

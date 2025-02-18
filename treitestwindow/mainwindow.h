@@ -33,6 +33,8 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void onXMLLoaded(QList<Window *> windows);
+
 private:
     Ui::MainWindow *ui;
 
@@ -41,7 +43,9 @@ private:
 
     void createNewWindow();
 
-    XMLParser xMLParser;
+    XMLParser *xMLParser;
+    QThread *xmlThread;
+
     QList<Window *> windows;
 
     QShortcut *keyCtrlS;
@@ -50,5 +54,6 @@ private:
     void saveWindow();
     void saveAllWindow();
     void init();
+    void initXmlParcer();
 };
 #endif // MAINWINDOW_H

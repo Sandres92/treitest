@@ -8,14 +8,19 @@
 
 namespace trei
 {
-    class XMLParser
+    class XMLParser : public QObject
     {
+        Q_OBJECT
+
     public:
-        XMLParser() = default;
+        XMLParser(QObject *parent = nullptr);
         ~XMLParser() = default;
 
         QList<Window *> load();
         void save(QList<Window *> windows);
+
+    signals:
+        void xmlLoaded(QList<Window *> windows);
 
     private:
         Factories factories;

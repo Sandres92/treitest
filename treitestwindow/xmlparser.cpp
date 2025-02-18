@@ -79,6 +79,7 @@ namespace trei
 
         file.close();
 
+        emit xmlLoaded(windows);
         return windows;
     }
 

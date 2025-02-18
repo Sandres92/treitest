@@ -1,19 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QPushButton>
-
-#include <QGraphicsDropShadowEffect>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QToolBar>
-#include <QDockWidget>
+#include <QtConcurrent>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    initXmlParcer();
 
     initHotKey();
     init();
@@ -22,6 +18,14 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete keyCtrlS;
+
+    if (xmlThread) {
+        xmlThread->quit();
+        xmlThread->wait();
+        delete xmlThread;
+    }
+
+    delete xMLParser;
 
     delete ui;
 }
@@ -38,6 +42,17 @@ void MainWindow::initHotKey()
     connect(keyCtrlS, SIGNAL(activated()), this, SLOT(slotShortcutCtrlS()));
 }
 
+void MainWindow::initXmlParcer()
+{
+    xMLParser = new XMLParser();
+    xmlThread = new QThread(this);
+
+    xMLParser->moveToThread(xmlThread);
+
+    connect(xmlThread, &QThread::started, xMLParser, &XMLParser::load);
+    connect(xMLParser, &XMLParser::xmlLoaded, this, &MainWindow::onXMLLoaded);
+}
+
 void MainWindow::slotShortcutCtrlS()
 {
     qDebug() << "ctrl + S";
@@ -46,12 +61,30 @@ void MainWindow::slotShortcutCtrlS()
 
 void MainWindow::loadXML()
 {
-    windows = xMLParser.load();
+    //QFuture<QList<Window *>> future = QtConcurrent::run([this]() {
+    //    return xMLParser.load();
+    //});
+    //future.waitForFinished();
+    //windows = future.result();
+
+    //for (int i = 0; i < windows.size(); i++)
+    //{
+    //    windows[i]->show();
+    //}
+
+    xmlThread->start();
+}
+
+void MainWindow::onXMLLoaded(QList<Window *> windows)
+{
+    windows = xMLParser->load();
 }
 
 void MainWindow::saveXML()
 {
-    xMLParser.save(windows);
+    QtConcurrent::run([this]() {
+        xMLParser->save(this->windows);
+    });
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -71,7 +104,6 @@ void MainWindow::createNewWindow()
     Window *newWindow = WindowFactory::instance().createWindow(countWindiws);
     windows.append(newWindow);
 }
-
 
 void MainWindow::on_actionQuit_triggered()
 {
