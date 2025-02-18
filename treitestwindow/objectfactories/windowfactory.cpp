@@ -49,4 +49,12 @@ namespace trei
 
         return window;
     }
+
+    Window *WindowFactory::createWindow(int countWindows)
+    {
+        Window *newWindow = new Window("Экран" + QString::number(countWindows));
+        newWindow->show();
+
+        return newWindow;
+    }
 }

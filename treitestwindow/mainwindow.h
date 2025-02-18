@@ -29,11 +29,15 @@ private slots:
 
     void on_actionSave_triggered();
 
+    void on_actionNew_triggered();
+
 private:
     Ui::MainWindow *ui;
 
     void loadXML();
     void saveXML();
+
+    void createNewWindow();
 
     XMLParser xMLParser;
     QList<Window *> windows;

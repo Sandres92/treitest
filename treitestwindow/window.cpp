@@ -8,6 +8,15 @@ namespace trei
         initWindow();
     }
 
+    Window::Window(const QString &name, QWidget *parent)
+        : QMainWindow(parent), name(name), color(QColor(211, 211, 211)), type(0),
+          windowWidth(800), windowHeight(600), usePassword(false),
+          password(""), groupName(""), subGroupName(""), posx(0), posy(0), accessLevel(0)
+    {
+        initWindow();
+        updateWindowData();
+    }
+
     Window::Window(const QString &name, const QColor &color, int type, int windowWidth, int windowHeight,
                    bool usePassword, const QString &password, const QString &groupName, const QString &subGroupName,
                    int posx, int posy, int accessLevel, QWidget *parent)
@@ -16,12 +25,7 @@ namespace trei
           posx(posx), posy(posy), accessLevel(accessLevel)
     {
         initWindow();
-
-        setWindowTitle(name);
-        resize(windowWidth, windowHeight);
-        move(posx, posy);
-
-        centralWidget->setStyleSheet("background-color:" + color.name() + ";");
+        updateWindowData();
     }
 
     Window::~Window()
@@ -47,6 +51,15 @@ namespace trei
         initHotKey();
         initQtPropertyBrowser();
         initMenuBar();
+    }
+
+    void Window::updateWindowData()
+    {
+        setWindowTitle(name);
+        resize(windowWidth, windowHeight);
+        move(posx, posy);
+
+        centralWidget->setStyleSheet("background-color:" + color.name() + ";");
     }
 
     void Window::initMenuBar()

@@ -51,12 +51,24 @@ void MainWindow::loadXML()
 
 void MainWindow::saveXML()
 {
-    qDebug() << "aaa";
     xMLParser.save(windows);
 }
 
 void MainWindow::on_actionSave_triggered()
 {
     saveXML();
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    createNewWindow();
+}
+
+void MainWindow::createNewWindow()
+{
+    int countWindiws = windows.size();
+
+    Window *newWindow = WindowFactory::instance().createWindow(countWindiws);
+    windows.append(newWindow);
 }
 

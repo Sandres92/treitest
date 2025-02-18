@@ -9,15 +9,12 @@ namespace trei
 {
     class Factories
     {
-        public:
-            Factories() = default;
-            ~Factories() = default;
+    public:
+        Factories() = default;
+        ~Factories() = default;
 
-            Window *createWindow(const QXmlStreamReader &xml);
-            ObjectView *createObjectView(const QString &className, QXmlStreamReader &xml);
-
-        private:
-            WindowFactory windowFactory;
+        Window *createWindow(const QXmlStreamReader &xml);
+        ObjectView *createObjectView(const QString &className, QXmlStreamReader &xml);
     };
 }
 #endif // FACTORIES_H

@@ -9,6 +9,6 @@ namespace trei
 
     Window *Factories::createWindow(const QXmlStreamReader &xml)
     {
-        return windowFactory.createWindow(xml);
+        return WindowFactory::instance().createWindow(xml);
     }
 }

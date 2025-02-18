@@ -72,6 +72,8 @@ namespace trei
             }
         }
 
+        qDebug() << "windows.size()  load " <<  windows.size();
+
         for (int i = 0; i < windows.size(); i++)
         {
             windows[i]->show();
@@ -105,6 +107,8 @@ namespace trei
         QXmlStreamWriter xml(&file);
         xml.setAutoFormatting(true);
         //xml.writeStartDocument();
+
+        qDebug() << "windows.size()  " << windows.size();
 
         for (int i = 0; i < windows.size(); i++)
         {

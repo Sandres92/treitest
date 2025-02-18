@@ -21,6 +21,7 @@ namespace trei
 
     public:
         explicit Window(QWidget *parent = 0);
+        explicit Window(const QString &name, QWidget *parent = 0);
         explicit Window(const QString &name, const QColor &color, int type, int windowWidth, int windowHeight,
                         bool usePassword, const QString &password, const QString &groupName, const QString &subGroupName,
                         int posx, int posy, int accessLevel, QWidget *parent = 0);
@@ -79,6 +80,8 @@ namespace trei
 
     private:
         void initWindow();
+        void updateWindowData();
+
         void initHotKey();
         void initQtPropertyBrowser();
         void initMenuBar();
@@ -86,8 +89,8 @@ namespace trei
         void selectObjectView(ObjectView *objectView);
         void unselectObjectView();
 
-        QString name;
-        QColor color;
+        QString name = "";
+        QColor color = QColor(211, 211, 211);
         int type;
         int windowWidth;
         int windowHeight;
