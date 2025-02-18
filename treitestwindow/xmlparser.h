@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QString>
 #include "objectfactories/factories.h"
+#include "xmlfactories/xmlfactories.h"
 
 namespace trei
 {
@@ -18,6 +19,7 @@ namespace trei
 
     private:
         Factories factories;
+        XMLFactories XMLFactories;
     };
 }
 #endif // XMLPARSER_H

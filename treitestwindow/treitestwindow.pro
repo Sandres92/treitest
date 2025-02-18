@@ -32,7 +32,6 @@ SOURCES += \
     xmlfactories/xmlpolygonviewfactory.cpp \
     xmlfactories/xmlrectangleviewfactory.cpp \
     xmlfactories/xmlwindowfactory.cpp \
-    xmlfactory.cpp \
     xmlparser.cpp
 
 HEADERS += \
@@ -59,7 +58,6 @@ HEADERS += \
     xmlfactories/xmlpolygonviewfactory.h \
     xmlfactories/xmlrectangleviewfactory.h \
     xmlfactories/xmlwindowfactory.h \
-    xmlfactory.h \
     xmlparser.h
 
 FORMS += \

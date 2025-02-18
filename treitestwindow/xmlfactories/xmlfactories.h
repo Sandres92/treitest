@@ -10,17 +10,17 @@ namespace trei
 {
     class XMLFactories
     {
-        public:
-            XMLFactories();
+    public:
+        XMLFactories();
 
-            const QByteArray windowToXML(const Window &window) const;
-            const QByteArray objectViewToXML(const ObjectView &window) const;
+        //const QByteArray windowToXML(const Window &window) const;
+        //const QByteArray objectViewToXML(const ObjectView &window) const;
 
-            void fillXMLAttributeForWindow(const Window &window, QXmlStreamWriter &xml);
-            void fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml);
+        void fillXMLAttributeForWindow(const Window &window, QXmlStreamWriter &xml);
+        void fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml);
 
-        private:
-            XMLWindowFactory xMLWindowFactory;
+    private:
+        XMLWindowFactory xMLWindowFactory;
     };
 }
 

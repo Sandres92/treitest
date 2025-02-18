@@ -105,14 +105,14 @@ namespace trei
         for (int i = 0; i < windows.size(); i++)
         {
             xml.writeStartElement("window");
-            factories.fillXMLAttributeForWindow(*windows[i], xml);
+            XMLFactories.fillXMLAttributeForWindow(*windows[i], xml);
 
             QList<ObjectView *> objectViews = windows[i]->getObjectViews();
 
             for (int j = 0; j < objectViews.size(); j++)
             {
                 xml.writeStartElement("objectView");
-                factories.fillXMLAttributeForObjectView(*objectViews[j], xml);
+                XMLFactories.fillXMLAttributeForObjectView(*objectViews[j], xml);
                 xml.writeEndElement();
             }
 
