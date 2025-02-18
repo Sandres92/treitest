@@ -51,5 +51,12 @@ void MainWindow::loadXML()
 
 void MainWindow::saveXML()
 {
+    qDebug() << "aaa";
     xMLParser.save(windows);
 }
+
+void MainWindow::on_actionSave_triggered()
+{
+    saveXML();
+}
+

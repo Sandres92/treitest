@@ -22,7 +22,7 @@ namespace trei
 
     void XMLObjectViewFactories::fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml)
     {
-        QString className = Convector::fulCalssNameToShort(objectView.metaObject()->className());
+        QString className = Convector::fullCalssNameToShort(objectView.metaObject()->className());
 
         if (factories.contains(className))
         {

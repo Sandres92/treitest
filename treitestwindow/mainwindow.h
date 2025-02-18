@@ -27,6 +27,8 @@ public:
 private slots:
     void slotShortcutCtrlS();
 
+    void on_actionSave_triggered();
+
 private:
     Ui::MainWindow *ui;
 

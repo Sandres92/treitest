@@ -11,7 +11,11 @@ namespace trei
 {
     QList<Window *> XMLParser::load()
     {
-        QFile file(":/resources/figure.xml");
+        //QString filePath = QDir::currentPath() + "/window_description.xml";
+        QString filePath = QCoreApplication::applicationDirPath() + "/window_description.xml";
+        qDebug() << "Load file " << filePath;
+
+        QFile file(filePath);
         QList<Window *> windows;
 
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -80,8 +84,8 @@ namespace trei
 
     void XMLParser::save(QList<Window *> windows)
     {
-        QString filePath = QDir::currentPath() + "/figure_copy_copy.xml";
-        qDebug() << filePath;
+        QString filePath = QCoreApplication::applicationDirPath() + "/window_description.xml";
+        qDebug() << "Save file " << filePath;
 
         QFileInfo fileInfo(filePath);
         QFile file(filePath);
@@ -123,6 +127,7 @@ namespace trei
         }
 
         //xml.writeEndDocument();
+        qDebug() << "File was saved " << filePath;
 
         file.close();
     }

@@ -19,7 +19,7 @@ namespace trei
 
     private:
         Factories factories;
-        XMLFactories XMLFactories;
+        trei::XMLFactories XMLFactories;
     };
 }
 #endif // XMLPARSER_H

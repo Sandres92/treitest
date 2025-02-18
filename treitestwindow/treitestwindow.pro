@@ -68,18 +68,61 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES += resources/figure.xml \
-            resources/figure_copy.xml \
-            resources/figure_copy_copy.xml
+#RESOURCES += \
+#            resources/window_description.xml \
+#            resources/window_description_origin.xml
 
 INCLUDEPATH += $$PWD/libs/include
-LIBS += -L$$PWD/libs -lQtSolutions_PropertyBrowser-head
+
+win32 {
+    LIBS += -L$$PWD/libs -lQtSolutions_PropertyBrowser-head
+}
+unix {
+    LIBS += -L$$PWD/libs -lQtSolutions_PropertyBrowser-head
+}
 
 win32:CONFIG(release, debug|release): DESTDIR = $$PWD/release
 win32:CONFIG(debug, debug|release): DESTDIR = $$PWD/debug
+unix:CONFIG(release, debug|release): DESTDIR = $$PWD/bin
 
 win32 {
     CONFIG += copy_dll
     copy_dll.commands = $$QMAKE_COPY $$PWD/libs/QtSolutions_PropertyBrowser-head.dll $$DESTDIR/
     QMAKE_EXTRA_COMPILERS += copy_dll
 }
+
+unix {
+    CONFIG += copy_so
+    copy_so.commands = cp $$PWD/libs/libQtSolutions_PropertyBrowser-head.so $$DESTDIR/
+    QMAKE_EXTRA_COMPILERS += copy_so
+}
+
+DISTFILES += \
+    resources/window_description.xml \
+    resources/window_description_origin.xml
+
+CONFIG(release, debug|release): DESTDIR = $$OUT_PWD/
+CONFIG(debug, debug|release): DESTDIR = $$OUT_PWD/
+
+copy_to_build.path = $$DESTDIR
+copy_to_build.files = resources/window_description.xml
+
+INSTALLS += \
+    copy_to_build
+
+#XML_SOURCE = $$PWD/resources/window_description.xml
+#XML_DEST = $$OUT_PWD/window_description.xml
+#
+#exists($$XML_SOURCE)
+#{
+#    message("Copy window_description.xml from $$XML_SOURCE в $$XML_DEST")
+#
+#    win32 {
+#        QMAKE_POST_LINK += xcopy /Y /Q \"$$shell_path($$XML_SOURCE)\" \"$$shell_path($$XML_DEST)\"$$escape_expand(\\n\\t)
+#    }
+#    unix {
+#        QMAKE_POST_LINK += cp -f $$XML_SOURCE $$XML_DEST$$escape_expand(\\n\\t)
+#    }
+#} else {
+#    error("File not found: $$XML_SOURCE")
+#}

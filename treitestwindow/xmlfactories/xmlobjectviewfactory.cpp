@@ -35,7 +35,8 @@ namespace trei
 
     void XMLObjectViewFactory::fillXMLAttributeForObjectView(const ObjectView &objectView, QXmlStreamWriter &xml)
     {
-        xml.writeAttribute("class", objectView.metaObject()->className());
+        QString className = Convector::fullCalssNameToShort(objectView.metaObject()->className());
+        xml.writeAttribute("class", className);
         xml.writeAttribute("name", objectView.getName());
         xml.writeAttribute("posx", QString::number(objectView.getPosx()));
         xml.writeAttribute("posy", QString::number(objectView.getPosy()));

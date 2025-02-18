@@ -46,7 +46,7 @@ namespace trei
                    .arg(alpha, 2, 16, QLatin1Char('0'));
         }
 
-        static QString fulCalssNameToShort(const QString &fullCalssName) {
+        static QString fullCalssNameToShort(const QString &fullCalssName) {
             QString className = fullCalssName;
             int doubleColonIndex = fullCalssName.lastIndexOf("::");
 

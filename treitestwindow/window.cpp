@@ -56,9 +56,9 @@ namespace trei
 
         fileMenu->addMenu(createCreationMenu(QPoint(windowWidth / 3.f, windowHeight / 3.f)));
 
-        QAction *saveAction = new QAction("Сохранить");
-        connect(saveAction, SIGNAL(triggered()), this, SLOT(onSaveAction()));
-        fileMenu->addAction(saveAction);
+        //QAction *saveAction = new QAction("Сохранить");
+        //connect(saveAction, SIGNAL(triggered()), this, SLOT(onSaveAction()));
+        //fileMenu->addAction(saveAction);
 
         mainMenu->addMenu(fileMenu);
     }
@@ -326,7 +326,7 @@ namespace trei
     {
         QByteArray copyBuffer;
         QDataStream out(&copyBuffer, QIODevice::WriteOnly);
-        out << Convector::fulCalssNameToShort(objectView->metaObject()->className());
+        out << Convector::fullCalssNameToShort(objectView->metaObject()->className());
         out << *objectView;
 
         QClipboard *clipboard = QApplication::clipboard();
