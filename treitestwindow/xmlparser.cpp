@@ -11,9 +11,23 @@ namespace trei
 {
     QList<Window *> XMLParser::load()
     {
-        //QString filePath = QDir::currentPath() + "/window_description.xml";
+        QString resourcePath = ":/resources/window_description.xml";
         QString filePath = QCoreApplication::applicationDirPath() + "/window_description.xml";
-        qDebug() << "Load file " << filePath;
+
+        if (!QFile::exists(filePath))
+        {
+            if (QFile::copy(resourcePath, filePath))
+            {
+                qDebug() << "File copied!";
+                QFile copiedFile(filePath);
+                copiedFile.setPermissions(QFile::WriteOwner | QFile::ReadOwner);
+            }
+            else
+            {
+                qDebug() << "Error copy!";
+            }
+        }
+
 
         QFile file(filePath);
         QList<Window *> windows;
@@ -23,6 +37,8 @@ namespace trei
             qDebug() << "Error open file to read! Error = " << file.errorString();
             return windows;
         }
+
+        qDebug() << "Load file " << filePath;
 
         QXmlStreamReader xml(&file);
         Window *window = nullptr;
@@ -106,8 +122,6 @@ namespace trei
         QXmlStreamWriter xml(&file);
         xml.setAutoFormatting(true);
         //xml.writeStartDocument();
-
-        qDebug() << "windows.size()  " << windows.size();
 
         for (int i = 0; i < windows.size(); i++)
         {

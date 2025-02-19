@@ -43,12 +43,12 @@ private:
 
     void createNewWindow();
 
-    XMLParser *xMLParser;
-    QThread *xmlThread;
+    XMLParser *xMLParser = nullptr;
+    QThread *xmlThread = nullptr;
 
     QList<Window *> windows;
 
-    QShortcut *keyCtrlS;
+    QShortcut *keyCtrlS = nullptr;
 
     void initHotKey();
     void saveWindow();

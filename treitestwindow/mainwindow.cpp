@@ -19,7 +19,8 @@ MainWindow::~MainWindow()
 {
     delete keyCtrlS;
 
-    if (xmlThread) {
+    if (xmlThread)
+    {
         xmlThread->quit();
         xmlThread->wait();
         delete xmlThread;
@@ -45,12 +46,12 @@ void MainWindow::initHotKey()
 void MainWindow::initXmlParcer()
 {
     xMLParser = new XMLParser();
-    xmlThread = new QThread(this);
-
-    xMLParser->moveToThread(xmlThread);
-
-    connect(xmlThread, &QThread::started, xMLParser, &XMLParser::load);
-    connect(xMLParser, &XMLParser::xmlLoaded, this, &MainWindow::onXMLLoaded);
+    //xmlThread = new QThread(this);
+    //
+    //xMLParser->moveToThread(xmlThread);
+    //
+    //connect(xmlThread, &QThread::started, xMLParser, &XMLParser::load);
+    //connect(xMLParser, &XMLParser::xmlLoaded, this, &MainWindow::onXMLLoaded);
 }
 
 void MainWindow::slotShortcutCtrlS()
@@ -72,7 +73,9 @@ void MainWindow::loadXML()
     //    windows[i]->show();
     //}
 
-    xmlThread->start();
+    //xmlThread->start();
+
+    windows = xMLParser->load();
 }
 
 void MainWindow::onXMLLoaded(QList<Window *> windows)
@@ -82,7 +85,8 @@ void MainWindow::onXMLLoaded(QList<Window *> windows)
 
 void MainWindow::saveXML()
 {
-    QtConcurrent::run([this]() {
+    QtConcurrent::run([this]()
+    {
         xMLParser->save(this->windows);
     });
 }

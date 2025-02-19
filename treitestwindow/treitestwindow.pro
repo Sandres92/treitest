@@ -68,9 +68,9 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-#RESOURCES += \
-#            resources/window_description.xml \
-#            resources/window_description_origin.xml
+RESOURCES += \
+            resources/window_description.xml \
+            resources/window_description_origin.xml
 
 INCLUDEPATH += $$PWD/libs/include
 
@@ -97,25 +97,44 @@ unix {
     QMAKE_EXTRA_COMPILERS += copy_so
 }
 
-DISTFILES += \
-    resources/window_description.xml \
-    resources/window_description_origin.xml
+
+#DISTFILES += \
+#    resources/window_description.xml \
+#    resources/window_description_origin.xml
 
 CONFIG(release, debug|release): DESTDIR = $$OUT_PWD/
 CONFIG(debug, debug|release): DESTDIR = $$OUT_PWD/
 
-exists($$OUT_PWD/window_description.xml) {
-    message("Файл уже существует: $$XML_DEST")
-} else {
-    message("Копирование файла: $$XML_SOURCE -> $$XML_DEST")
+#CONFIG(release, debug|release): DESTDIR = $$OUT_PWD/
+#CONFIG(debug, debug|release): DESTDIR = $$OUT_PWD/
+#
+#copy_to_build.path = $$DESTDIR
+#copy_to_build.files = resources/window_description.xml
+#
+#exists($$DESTDIR/window_description.xml) {
+#    message("File already exist: $$DESTDIR/window_description.xml")
+#} else {
+#    message("File copy: resources/window_description.xml -> $$DESTDIR")
+#
+#    copy_to_build.path = $$DESTDIR
+#    copy_to_build.files = resources/window_description.xml
+#
+#    INSTALLS += \
+#        copy_to_build
+#}
 
-    #copy_to_build.path = $$DESTDIR
-    #copy_to_build.files = $$XML_SOURCE
-    #INSTALLS += copy_to_build
-
-    copy_to_build.path = $$DESTDIR
-    copy_to_build.files = resources/window_description.xml
-
-    INSTALLS += \
-        copy_to_build
-}
+#XML_SOURCE = $$PWD/resources/window_description.xml
+#XML_DEST = $$DESTDIR window_description.xml
+#
+#exists($$XML_DEST) {
+#    message("File already exists: $$XML_DEST")
+#} else {
+#    message("Copying file: $$XML_SOURCE -> $$XML_DEST")
+#
+#    win32 {
+#        QMAKE_POST_LINK += xcopy /Y /Q \"$$shell_path($$XML_SOURCE)\" \"$$shell_path($$XML_DEST)\"$$escape_expand(\\n\\t)
+#    }
+#    unix {
+#        QMAKE_POST_LINK += cp -n $$XML_SOURCE $$XML_DEST$$escape_expand(\\n\\t)
+#    }
+#}

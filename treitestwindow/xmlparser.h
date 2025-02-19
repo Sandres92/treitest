@@ -13,7 +13,6 @@ namespace trei
         Q_OBJECT
 
     public:
-        XMLParser(QObject *parent = nullptr);
         ~XMLParser() = default;
 
         QList<Window *> load();
